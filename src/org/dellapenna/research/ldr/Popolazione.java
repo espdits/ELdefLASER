@@ -5,7 +5,6 @@
  */
 package org.dellapenna.research.ldr;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -33,6 +32,10 @@ public class Popolazione {
     /**
      * Metodo che crea la prima popolazione, dove ogni individuo ha subito un
      * numero di mosse prestabilito, salvandola in un file esterno.
+     *
+     * @param primaPopolazione vettore di appoggio per creare la prima
+     * popolazione
+     * @throws java.io.IOException I/O eccezzione momentaneamente non gestita
      */
     public void creaPopolazione(ArrayList<LineaDeformabile> primaPopolazione) throws IOException {
         // ArrayList contenente gli individui generati
@@ -90,7 +93,7 @@ public class Popolazione {
         primaPOP = primaPopolazione;
 
         //Salvo su file
-       // gestioneSalvataggio.salvaDATA(primaPopolazione, contatoreMosse);
+        // gestioneSalvataggio.salvaDATA(primaPopolazione, contatoreMosse);
     }
 
     /**
@@ -103,17 +106,8 @@ public class Popolazione {
     public double valFitness(Linea linea, LineaDeformabile lineaDeformabile) {
 
         double val_fitness = 0;
-        //iteratore della linea.
-        Iterator it_linea = linea.getQuadratiDeformati().entrySet().iterator();
-        //iteratore della linea deformabile
-        Iterator it_lineaDef = lineaDeformabile.getQuadratiDeformati().entrySet().iterator();
-
-        //per ogni quadrato della linea deformabile
-        // Verifica con il metodo hasNext() che nella hashmap
-        // ci siano altri elementi su cui ciclare
-        while (it_lineaDef.hasNext()) {
-
-            Map.Entry entry_lineaDef = (Map.Entry) it_lineaDef.next();
+        // Per ogni quadrato modificato della linea deformabile
+        for (Map.Entry entry_lineaDef : lineaDeformabile.getQuadratiDeformati().entrySet()) {
             //Quadrato LINEA deformabile
             Quadrato quadrato_lineaDef;
             //quadrato in esame della Linea Deformabile
@@ -140,8 +134,7 @@ public class Popolazione {
                 double auxFit;
                 auxFit = val_fitness;
 
-                val_fitness = val_fitness + ((checkAndValutation(quadrato_linea, quadrato_lineaDef))*0.7);
-         
+                val_fitness = val_fitness + ((checkAndValutation(quadrato_linea, quadrato_lineaDef)) * 0.7);
 
             } //se è nella posizione +1
             else if (linea.getQuadratiDeformati().containsKey(posQLD + 1)) {
@@ -150,8 +143,7 @@ public class Popolazione {
                 quadrato_linea = linea.getQuadratiDeformati().get(posQLD + 1);
                 double auxFit;
                 auxFit = val_fitness;
-                val_fitness = val_fitness + ((checkAndValutation(quadrato_linea, quadrato_lineaDef))*0.7);
-             
+                val_fitness = val_fitness + ((checkAndValutation(quadrato_linea, quadrato_lineaDef)) * 0.7);
 
             } //non c'è nessun quadrato nelle posizioni limitrofi al quadrato della linea deformabile selezionatas
             else {
@@ -173,107 +165,107 @@ public class Popolazione {
     private double checkAndValutation(Quadrato quadrato_linea, Quadrato quadrato_lineaDef) {
         double val_fitness;
         switch (quadrato_linea.nome_def) {
+            default:
+                System.err.println("Non ci deve stare qui");
+                return 0;
             case "UL":
                 switch (quadrato_lineaDef.nome_def) {
+                    default:
+                        System.err.println("Non ci deve stare qui");
+                        return 0;
                     case "UL":
                         //aggiorno fitness
                         return val_fitness = 0.8;
-                    // break;
 
                     case "UR":
                         //aggiorno fitness
                         return val_fitness = 0.15;
-                    //   break;
 
                     case "LL":
                         //aggiorno fitness
                         return val_fitness = 0.025;
-                    //  break;
 
                     case "LR":
                         //aggiorno fitness
                         return val_fitness = 0.025;
-                    //break;
+
                 }
-           //     break;
+
             case "LL":
                 switch (quadrato_lineaDef.nome_def) {
+                    default:
+                        System.err.println("Non ci deve stare qui");
+                        return 0;
+
                     case "LL":
                         //aggiorno fitness
                         return val_fitness = 0.8;
-                    //break;
 
                     case "LR":
                         //aggiorno fitness
                         return val_fitness = 0.15;
-                    //break;
 
                     case "UL":
                         //aggiorno fitness
                         return val_fitness = 0.025;
-                    //break;
 
                     case "UR":
                         //aggiorno fitness
                         return val_fitness = 0.025;
-                    //break;
+
                 }
 
-             //   break;
             case "UR":
                 switch (quadrato_lineaDef.nome_def) {
+                    default:
+                        System.err.println("Non ci deve stare qui");
+                        return 0;
                     case "UR":
                         //aggiorno fitness
                         return val_fitness = 0.8;
-                    //break;
 
                     case "UL":
                         //aggiorno fitness
                         return val_fitness = 0.15;
-                    //break;
 
                     case "LL":
                         //aggiorno fitness
                         return val_fitness = 0.025;
-                    //break;
 
                     case "LR":
                         //aggiorno fitness
                         return val_fitness = 0.025;
-                    //break;
+
                 }
 
-        //       break;
+            //       break;
             case "LR":
                 switch (quadrato_lineaDef.nome_def) {
+                    default:
+                        System.err.println("Non ci deve stare qui");
+                        return 0;
                     case "LR":
                         //aggiorno fitness
                         return val_fitness = 0.8;
-                    //break;
 
                     case "LL":
                         //aggiorno fitness
                         return val_fitness = 0.15;
-                    //break;
 
                     case "UR":
                         //aggiorno fitness
                         return val_fitness = 0.025;
-                    //break;
 
                     case "UL":
                         //aggiorno fitness
                         return val_fitness = 0.025;
-                    //break;
+
                 }
 
-          //     break;
-
         }
-        return 0; // se non è in nessun caso!??!??!? default
+
     }
 
- 
     /**
      * Ritorna la prima popolazione
      *
@@ -283,10 +275,13 @@ public class Popolazione {
         return primaPOP;
     }
 
+    /**
+     * ritorna il numero di mosse da effettuare sulla linea deformabile
+     *
+     * @return numero mosse da fare sulla linea deformabile
+     */
     public int getContatoreMosse() {
         return contatoreMosse;
     }
-    
-    
-    
+
 }
