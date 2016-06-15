@@ -9,3 +9,7 @@ modificata classe Linea.class
 modificata numero lunghezza linea deformabile size = 50 
 10/06/2016
 
+15/06/2016
+
+Questo progetto diventa la versione ufficiale, e quindi si lavorerà sempre qui al momento.
+Data una pulizia e ordinata alle varie classi.
