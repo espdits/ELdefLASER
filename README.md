@@ -9,3 +9,8 @@ modificata classe Linea.class
 modificata numero lunghezza linea deformabile size = 50 
 10/06/2016
 
+15/06/2016
+Diventata la versione ufficiale questo repository ELdefLASER
+PUlita e riordinata al codice
+Si sta lavorando su un miglioramento della funzione di fitness
+Creato scheletro di un possibile miglioramente della funzione di fitness
