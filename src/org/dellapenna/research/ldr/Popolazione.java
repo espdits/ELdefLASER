@@ -165,7 +165,7 @@ public class Popolazione {
                 quadrati_non_schedati.add(quadrato_lineaDef);
                 //metto la posizione del medesimo quadrato in un array di posizioni dei quadrati
                 posizioni_quadrati_non_schedati.add(posQLD);
-                System.out.println("quadrato non schedato aggiunto" + posQLD);
+                //System.out.println("quadrato non schedato aggiunto" + posQLD);
 
             }
         }
@@ -189,8 +189,18 @@ public class Popolazione {
              
                 // calcolo differenza di posizione associo il primo quadrato della linea al primo della linea deformabile
                 aux_dif = Math.abs((posizioni_quadrati_non_schedati.get(aux_pos)) - (int) entry_linea.getKey());
-                System.out.println("Differenza aux " + (int) entry_linea.getKey() + " valore : " + aux_dif);
+                //System.out.println("Differenza aux " + (int) entry_linea.getKey() + " valore : " + aux_dif);
                
+                //Devo aggiornare l'attuale valore di val_fitness
+                // Sottraggo l'aux_dif e lo moltiplico per un peso in modo che vada ad
+                // influire al valore di fitness
+                //il range di valori può essere anche negativo
+                val_fitness= val_fitness - ( aux_dif*0.00125);
+                //System.out.println("val fitness con sottrazione " + val_fitness);
+                
+                
+                
+                
                 // il quadrato candidato diverrà un quadrato selezionato
                 quadrato_candidato.flagSelezione = true;
 
