@@ -7,7 +7,11 @@ package org.dellapenna.research.ldr;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Random;
 
 /**
@@ -21,6 +25,11 @@ public class Popolazione {
 
     //Variabile che imposta la dimensione della popolazione
     final int dimPopolazione = 50;
+
+    //numero di individui da prelevare deve essere un numero abbastanza piccolo 
+    // e in rapporto alla dimensione della popolazione antecedente e costante per 
+    // tutte le successive ( sempre pari ) 
+    final int selELit = 6;
 
     //ArrayList salvataggio prima popolazione ?!!??!?!
     ArrayList<LineaDeformabile> primaPOP = new ArrayList<>();
@@ -90,9 +99,6 @@ public class Popolazione {
 
         System.out.println("Popolazione" + primaPopolazione.size());
         primaPOP = primaPopolazione;
-
-        //Salvo su file
-        // gestioneSalvataggio.salvaDATA(primaPopolazione, contatoreMosse);
     }
 
     /**
@@ -102,9 +108,9 @@ public class Popolazione {
      * @param lineaDeformabile individuo in esame
      * @return val_fitness valore della funzione di fitness
      */
-    public double valFitness(Linea linea, LineaDeformabile lineaDeformabile) {
+    public Double valFitness(Linea linea, LineaDeformabile lineaDeformabile) {
 
-        double val_fitness = 0;
+        Double val_fitness = 0.0;
         // Per ogni quadrato modificato della linea deformabile
         ArrayList<Quadrato> quadrati_non_schedati;
         quadrati_non_schedati = new ArrayList<>();
@@ -126,7 +132,7 @@ public class Popolazione {
                 //Quadrato della linea da confutare
                 Quadrato quadrato_linea;
                 quadrato_linea = linea.getQuadratiDeformati().get(posQLD);
-                double auxFit;
+                Double auxFit;
                 auxFit = val_fitness;
                 val_fitness = val_fitness + checkAndValutation(quadrato_linea, quadrato_lineaDef);
                 // FLAG di selezione che aiutano al calcolo della funzione di fitness 
@@ -138,7 +144,7 @@ public class Popolazione {
                 //Quadrato della linea da confutare
                 Quadrato quadrato_linea;
                 quadrato_linea = linea.getQuadratiDeformati().get(posQLD - 1);
-                double auxFit;
+                Double auxFit;
                 auxFit = val_fitness;
 
                 val_fitness = val_fitness + ((checkAndValutation(quadrato_linea, quadrato_lineaDef)) * 0.7);
@@ -151,7 +157,7 @@ public class Popolazione {
                 //Quadrato della linea da confutare
                 Quadrato quadrato_linea;
                 quadrato_linea = linea.getQuadratiDeformati().get(posQLD + 1);
-                double auxFit;
+                Double auxFit;
                 auxFit = val_fitness;
                 val_fitness = val_fitness + ((checkAndValutation(quadrato_linea, quadrato_lineaDef)) * 0.7);
                 // FLAG di selezione che aiutano al calcolo della funzione di fitness 
@@ -170,10 +176,6 @@ public class Popolazione {
             }
         }
 
-        
-        
-        
-        
         int aux_dif, aux_pos;
         aux_dif = 0;
         aux_pos = 0;
@@ -186,21 +188,18 @@ public class Popolazione {
             quadrato_candidato = (Quadrato) entry_linea.getValue();
             // se il flag di selezione è uguale a false del quadrato candidato all'associazione
             if (aux_pos < posizioni_quadrati_non_schedati.size() && aux_pos >= 0 && quadrato_candidato.flagSelezione == false) {
-             
+
                 // calcolo differenza di posizione associo il primo quadrato della linea al primo della linea deformabile
                 aux_dif = Math.abs((posizioni_quadrati_non_schedati.get(aux_pos)) - (int) entry_linea.getKey());
                 //System.out.println("Differenza aux " + (int) entry_linea.getKey() + " valore : " + aux_dif);
-               
+
                 //Devo aggiornare l'attuale valore di val_fitness
                 // Sottraggo l'aux_dif e lo moltiplico per un peso in modo che vada ad
                 // influire al valore di fitness
                 //il range di valori può essere anche negativo
-                val_fitness= val_fitness - ( aux_dif*0.00125);
+                val_fitness = val_fitness - (aux_dif * 0.00125);
                 //System.out.println("val fitness con sottrazione " + val_fitness);
-                
-                
-                
-                
+
                 // il quadrato candidato diverrà un quadrato selezionato
                 quadrato_candidato.flagSelezione = true;
 
@@ -216,16 +215,6 @@ public class Popolazione {
             reset.flagSelezione = false;
         }
 
-        /*
-        for (Quadrato quadrato_non_schedato : quadrati_non_schedati) {
-            for (int i = 0; i < posizioni_quadrati_non_schedati.size(); i++) {
-                if (linea.getQuadratiDeformati().get(i).flagSelezione == false) {
-
-                }
-            }
-
-        }
-         */
         return val_fitness;
     }
 
@@ -360,4 +349,84 @@ public class Popolazione {
         return contatoreMosse;
     }
 
+    /**
+     * Metodo che crea una generazione successiva a quella data come input
+     *
+     * @param oldPopolazione vecchia popolazione (generazione) di linee
+     * Deformabili
+     * @return newPopolazione nuova popolazione (generazione) di linee
+     * Deformabili
+     */
+    public ArrayList<LineaDeformabile> nextPopolazione(ArrayList<LineaDeformabile> oldPopolazione) {
+        ArrayList<LineaDeformabile> newPopolazione;
+        newPopolazione = new ArrayList<>();
+
+        // prima selezione ELITARISMO
+        newPopolazione = elitarism(oldPopolazione);
+
+        return newPopolazione;
+    }
+
+    /**
+     * Elitarismo prende i migliori individui e li copia direttamente nella
+     * popolazione successiva
+     *
+     * @param oldPopolazione vecchia popolazione da cui estrarre gli individui
+     * @return newPopolazione primo riempimento del vettore della nuova
+     * popolazione
+     */
+    public ArrayList<LineaDeformabile> elitarism(ArrayList<LineaDeformabile> oldPopolazione) {
+
+        // vettore di ritorno
+        ArrayList<LineaDeformabile> newPopolazione;
+        newPopolazione = new ArrayList<>();
+/*
+        //Vettore ausiliario per salvare le linee deformbili
+        LineaDeformabile[] aux_LD;
+        aux_LD = new LineaDeformabile[selELit];
+*/
+/*
+        //Vettore ausiliario per confrontare i valori 
+        double[] confrFitness;
+        confrFitness = new double[selELit];
+*/
+        //Aggiungo al vettore ausiliario n°selElit elementi double 
+      /*  for (int i = 0; i < selELit; i++) {
+            confrFitness[i] = oldPopolazione.get(i).getVal_fitness();
+            System.out.println("valori iniziali fitness indice" + i + " valore fitness:" + confrFitness[i]);
+        }
+*/
+        // devo scorrere oldPopolazione e prendere il più alti n°selElite individui con 
+        // valore di fitness più alta.
+        Collections.sort(oldPopolazione, new Comparator<LineaDeformabile>() {
+
+            @Override
+            public int compare(LineaDeformabile o1, LineaDeformabile o2) {
+                return (o1.getVal_fitness()).compareTo(o2.getVal_fitness());
+            }
+        });
+        Collections.reverse(oldPopolazione);
+
+        for (int i = 0; i < selELit; i++) {
+            
+           newPopolazione.add(oldPopolazione.get(i));
+            /*for (LineaDeformabile lineaDeformabile : oldPopolazione) {
+                
+                
+                // devo confrontare i valori delle linee deformabili con i valori candidati all'inclusione 
+                // prima iterazione il piu' grande poi il secondo ecc ecc....... 
+                if (lineaDeformabile.getVal_fitness() >= confrFitness[i]) {
+                      // devo aggiornare il valore dell'elemento i-esimo
+                      confrFitness[i]=lineaDeformabile.getVal_fitness();
+                      // lo metto sul vettore ausiliario
+                      aux_LD[i]=lineaDeformabile;
+                }
+            }*/
+        }
+
+
+        // copio vettori lineeDeformabili maggiori nell'arraylist    <
+       // newPopolazione.addAll(Arrays.asList(aux_LD));
+        return newPopolazione;
+    }
 }

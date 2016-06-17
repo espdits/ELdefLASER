@@ -1,4 +1,5 @@
 package org.dellapenna.research.ldr;
+
 /*prova cambiamenti per git*/
 import Servizi.GestioneSalvataggio;
 import java.io.IOException;
@@ -20,6 +21,8 @@ public class DeformazioneLaser {
 
     //Insieme di Individui creati prima poplazione.
     ArrayList<LineaDeformabile> primaPopolazione = new ArrayList<>();
+    //Insieme di Individui creati per la seconda popolazione
+    ArrayList<LineaDeformabile> secondaPopolazione = new ArrayList<>();
 
     //la coda contiene gli stati (linee deformate e tempo corrente) da valutare
     //QUESTA STRUTTURA DOVREBBE ANDARE SU DISCO;
@@ -161,7 +164,7 @@ public class DeformazioneLaser {
         //TODO PRIMA POPOLAZIONE RISULTA VUOTO RISOLVERE!!! 
         pop.creaPopolazione(primaPopolazione);
         primaPopolazione = pop.getPrimaPOP();
-      
+
         //confronto le linee della popolazione con la linea generata e valuto il fitness
         for (LineaDeformabile lineaDef : primaPopolazione) {
             lineaDef.setVal_fitness(pop.valFitness(linea, lineaDef));
@@ -169,6 +172,21 @@ public class DeformazioneLaser {
 
         GestioneSalvataggio.salvaDATA(primaPopolazione, pop.getContatoreMosse());
 
+        //Devo creare una nuova popolazione dalla precedente:
+        //  1 APPLICO ELITARISMO 
+        //  2 APPLICO ROULETTE WHEEL SELECTION
+        //  3 APPLICO PARENT SELECTION
+        //  4 CROSS-OVER
+        //  5 MUTAZIONE
+        //QUI entra e va a creare la seconda popolazione
+        secondaPopolazione = pop.nextPopolazione(primaPopolazione);
+        // stampa controllo
+        int i = 1;
+        for (LineaDeformabile lineadef : secondaPopolazione) {
+
+            System.out.println("valori nel vettore di array piu grandi " + i + " con valore " + lineadef.getVal_fitness());
+            i++;
+        }
     }
 
     public static void main(String args[]) throws IOException {
