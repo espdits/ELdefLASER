@@ -26,6 +26,9 @@ public class Popolazione {
     //Variabile che imposta la dimensione della popolazione
     final int dimPopolazione = 50;
 
+    // numero che influisce sulla funzione di fitness come la differenza dalla posizione da modificare
+    // e il quadrato modificato 
+    final double scartoPOS = 0.00125;
     //numero di individui da prelevare deve essere un numero abbastanza piccolo 
     // e in rapporto alla dimensione della popolazione antecedente e costante per 
     // tutte le successive ( sempre pari ) 
@@ -197,7 +200,7 @@ public class Popolazione {
                 // Sottraggo l'aux_dif e lo moltiplico per un peso in modo che vada ad
                 // influire al valore di fitness
                 //il range di valori può essere anche negativo
-                val_fitness = val_fitness - (aux_dif * 0.00125);
+                val_fitness = val_fitness - (aux_dif * scartoPOS);
                 //System.out.println("val fitness con sottrazione " + val_fitness);
 
                 // il quadrato candidato diverrà un quadrato selezionato
@@ -363,6 +366,8 @@ public class Popolazione {
 
         // prima selezione ELITARISMO
         newPopolazione = elitarism(oldPopolazione);
+        rouletteWheelSelection(newPopolazione, oldPopolazione);
+        // creazione mating pool e roulette wheel selection
 
         return newPopolazione;
     }
@@ -380,24 +385,7 @@ public class Popolazione {
         // vettore di ritorno
         ArrayList<LineaDeformabile> newPopolazione;
         newPopolazione = new ArrayList<>();
-/*
-        //Vettore ausiliario per salvare le linee deformbili
-        LineaDeformabile[] aux_LD;
-        aux_LD = new LineaDeformabile[selELit];
-*/
-/*
-        //Vettore ausiliario per confrontare i valori 
-        double[] confrFitness;
-        confrFitness = new double[selELit];
-*/
-        //Aggiungo al vettore ausiliario n°selElit elementi double 
-      /*  for (int i = 0; i < selELit; i++) {
-            confrFitness[i] = oldPopolazione.get(i).getVal_fitness();
-            System.out.println("valori iniziali fitness indice" + i + " valore fitness:" + confrFitness[i]);
-        }
-*/
-        // devo scorrere oldPopolazione e prendere il più alti n°selElite individui con 
-        // valore di fitness più alta.
+
         Collections.sort(oldPopolazione, new Comparator<LineaDeformabile>() {
 
             @Override
@@ -408,25 +396,150 @@ public class Popolazione {
         Collections.reverse(oldPopolazione);
 
         for (int i = 0; i < selELit; i++) {
-            
-           newPopolazione.add(oldPopolazione.get(i));
-            /*for (LineaDeformabile lineaDeformabile : oldPopolazione) {
-                
-                
-                // devo confrontare i valori delle linee deformabili con i valori candidati all'inclusione 
-                // prima iterazione il piu' grande poi il secondo ecc ecc....... 
-                if (lineaDeformabile.getVal_fitness() >= confrFitness[i]) {
-                      // devo aggiornare il valore dell'elemento i-esimo
-                      confrFitness[i]=lineaDeformabile.getVal_fitness();
-                      // lo metto sul vettore ausiliario
-                      aux_LD[i]=lineaDeformabile;
-                }
-            }*/
+
+            //aggiungo gli elementi con fitness più alto nella nuova popolazione
+            newPopolazione.add(oldPopolazione.get(i));
+            //levo gli elementi selezionati dalla vecchia popolazione
+            oldPopolazione.remove(i);
+
         }
 
-
-        // copio vettori lineeDeformabili maggiori nell'arraylist    <
-       // newPopolazione.addAll(Arrays.asList(aux_LD));
         return newPopolazione;
+    }
+
+    /**
+     * Seleziona gli individui per l'accoppiamento
+     *
+     * @param oldPopolazione vecchia popolazione con eliminazione degli
+     * individui di Elite
+     * @return newPopolazione seleziona e accoppiata e mutata/ o ritorna solo la
+     * mating Pool? TODO
+     */
+    public void rouletteWheelSelection(ArrayList<LineaDeformabile> newPopolazione, ArrayList<LineaDeformabile> oldPopolazione) {
+
+        Random r, rDiv;
+        r = new Random();
+        rDiv = new Random();
+
+        //Somma fitness di tutta la popolazione
+        Double deltaS;
+        deltaS = 0.0;
+
+        //Variabile di controllo numero indidui
+        int contPOP = 0;
+
+        // fitness MINIMO per effettuare la normalizzazione
+        Double fitnessMIN;
+
+        //Array di valori di fitness non normalizzati
+        Double fitnessUPD[];
+        fitnessUPD = new Double[oldPopolazione.size()];
+
+        //Selezionatore di individuo è quel numero che esce e seleziona l'individuo.
+        Double randomSelecter;
+        randomSelecter = 0.0;
+
+        //Array di numeri normalizzati "non negativi" i quali vengono assegnati alla lineaDeformabile 
+        //per la selezione ( probabilità di selezione ).
+        Double probSel[];
+        probSel = new Double[oldPopolazione.size()];
+
+        // array che contiene gli individui candidati all'accoppiamento.
+        ArrayList<LineaDeformabile> matingPool = new ArrayList<>();
+
+        //ArrayList ordinato e prendo ultimo elemento che è il piu piccolo per effettuare una statistica
+        // con valori tutti > 0
+        fitnessMIN = oldPopolazione.get(oldPopolazione.size() - 1).getVal_fitness();
+        //   System.out.println("fitness MIN " + fitnessMIN);
+        int i = 0;
+        //aggiorno le fitness di tutto l'arraylist
+        for (LineaDeformabile lineaDeformabile : oldPopolazione) {
+            //   System.out.println("valore fitness " + lineaDeformabile.getVal_fitness());
+            fitnessUPD[i] = lineaDeformabile.getVal_fitness();
+            Double aux_fitness;
+            aux_fitness = lineaDeformabile.getVal_fitness();
+
+            lineaDeformabile.setVal_fitness(aux_fitness + -fitnessMIN + 0.00001);
+            //     System.out.println("valore fitness aggiornato  " + lineaDeformabile.getVal_fitness());
+            //   System.out.println("valore fitness vector  " + fitnessUPD[i]);
+            i++;
+        }
+
+        //Somme della fitness di tutta la popolazione
+        for (LineaDeformabile lineaDeformabile : oldPopolazione) {
+            if (lineaDeformabile.getVal_fitness() >= 0.0) {
+                deltaS = deltaS + lineaDeformabile.getVal_fitness();
+                contPOP++;
+            }
+        }
+        i = 0;
+        //Probabilità di selezione è uguale fitness elemento diviso sommatoria dei fitness
+        for (LineaDeformabile lineaDeformabile : oldPopolazione) {
+
+            probSel[i] = lineaDeformabile.getVal_fitness() / deltaS;
+            System.out.println("probabilita di selezione " + probSel[i]);
+
+            i++;
+        }
+
+        // finche non estraggo tutti gli elementi della vecchia popolazione
+        while (oldPopolazione.size() != matingPool.size()) {
+
+            //Devo generare dei numeri random con millesimali...  la prendo per buona cosi ma può
+            //essere migliorata notevolmente   ||| È FONDAMENTALE QUESTO PASSO |||. 
+            switch (rDiv.nextInt(5)) {
+                case 0:
+                    //     System.out.println("sto in 0");
+                    randomSelecter = (Double) r.nextDouble() / 10;
+                    break;
+                case 1:
+                    //   System.out.println("sto in 1");
+                    randomSelecter = (Double) r.nextDouble() / 10;
+                    break;
+                case 2:
+                    // System.out.println("sto in 2");
+                    randomSelecter = (Double) r.nextDouble() / 100;
+                    break;
+                case 3:
+                    //  System.out.println("sto in 3");
+                    randomSelecter = (Double) r.nextDouble() / 100;
+                    break;
+                case 4:
+                    // System.out.println("sto in 4");
+                    randomSelecter = (Double) r.nextDouble() / 1000;
+                    break;
+                default:
+                    System.out.println("errore random selecter");
+                    break;
+            }
+
+            // devo selezionare individuo estratto dal numero randomico.
+            for (int j = 0; j < oldPopolazione.size() - 1; j++) {
+                LineaDeformabile lineaDefWork = oldPopolazione.get(j);
+                if (randomSelecter > probSel[j+1] && randomSelecter < probSel[j]) {
+                    
+                    
+                    // per aggiornare al fitness reale
+                    Double valFitnessWork = fitnessUPD[j];
+                    lineaDefWork.setVal_fitness(valFitnessWork);
+                    
+                    //aggiungo elemento nella mating pool
+                    matingPool.add(lineaDefWork);
+                    
+       
+                }
+
+            }
+
+         //   System.out.println("random number " + randomSelecter);
+
+        }
+
+        System.out.println("INDIVIDUI NELLA MATING POOL");
+        for (LineaDeformabile giro : matingPool) {
+            System.out.println(" fintess individuo nella mating pool  " + giro.getVal_fitness());
+        }
+        System.out.println("popolazione attuale selezionata " + contPOP + "   Val Delta S " + deltaS);
+
     }
 }
