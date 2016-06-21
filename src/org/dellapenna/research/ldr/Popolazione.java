@@ -394,14 +394,20 @@ public class Popolazione {
             }
         });
         Collections.reverse(oldPopolazione);
+        for (LineaDeformabile lineaD : oldPopolazione) {
+            System.out.println(" linea dopo uscita revers fitness " + lineaD.getVal_fitness());
+        }
 
         for (int i = 0; i < selELit; i++) {
 
             //aggiungo gli elementi con fitness più alto nella nuova popolazione
             newPopolazione.add(oldPopolazione.get(i));
-            //levo gli elementi selezionati dalla vecchia popolazione
-            oldPopolazione.remove(i);
 
+        }
+        for (int i = 0; i < selELit; i++) {
+
+            System.out.println("elemento fitness rimosso " + oldPopolazione.get(0).getVal_fitness());
+            oldPopolazione.remove(0);
         }
 
         return newPopolazione;
@@ -516,23 +522,20 @@ public class Popolazione {
             // devo selezionare individuo estratto dal numero randomico.
             for (int j = 0; j < oldPopolazione.size() - 1; j++) {
                 LineaDeformabile lineaDefWork = oldPopolazione.get(j);
-                if (randomSelecter > probSel[j+1] && randomSelecter < probSel[j]) {
-                    
-                    
+                if (randomSelecter > probSel[j + 1] && randomSelecter < probSel[j]) {
+
                     // per aggiornare al fitness reale
                     Double valFitnessWork = fitnessUPD[j];
                     lineaDefWork.setVal_fitness(valFitnessWork);
-                    
+
                     //aggiungo elemento nella mating pool
                     matingPool.add(lineaDefWork);
-                    
-       
+
                 }
 
             }
 
-         //   System.out.println("random number " + randomSelecter);
-
+            //   System.out.println("random number " + randomSelecter);
         }
 
         System.out.println("INDIVIDUI NELLA MATING POOL");
