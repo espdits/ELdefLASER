@@ -361,13 +361,21 @@ public class Popolazione {
      * Deformabili
      */
     public ArrayList<LineaDeformabile> nextPopolazione(ArrayList<LineaDeformabile> oldPopolazione) {
+        
         ArrayList<LineaDeformabile> newPopolazione;
         newPopolazione = new ArrayList<>();
-
+        
+        ArrayList<LineaDeformabile> matingPool;
+        matingPool = new ArrayList<>();
+        
+        
         // prima selezione ELITARISMO
         newPopolazione = elitarism(oldPopolazione);
-        rouletteWheelSelection(newPopolazione, oldPopolazione);
         // creazione mating pool e roulette wheel selection
+        matingPool = rouletteWheelSelection(newPopolazione, oldPopolazione);
+        // Applico parent selection o direttamente crossover e mutazione?
+        
+       
 
         return newPopolazione;
     }
@@ -394,9 +402,6 @@ public class Popolazione {
             }
         });
         Collections.reverse(oldPopolazione);
-        for (LineaDeformabile lineaD : oldPopolazione) {
-            System.out.println(" linea dopo uscita revers fitness " + lineaD.getVal_fitness());
-        }
 
         for (int i = 0; i < selELit; i++) {
 
@@ -406,7 +411,7 @@ public class Popolazione {
         }
         for (int i = 0; i < selELit; i++) {
 
-            System.out.println("elemento fitness rimosso " + oldPopolazione.get(0).getVal_fitness());
+            //  System.out.println("elemento fitness rimosso " + oldPopolazione.get(0).getVal_fitness());
             oldPopolazione.remove(0);
         }
 
@@ -416,12 +421,14 @@ public class Popolazione {
     /**
      * Seleziona gli individui per l'accoppiamento
      *
+     * @param newPopolazione nuova popolazione da riempire con i restanti
+     * elementi dopo l'elitarismo.
      * @param oldPopolazione vecchia popolazione con eliminazione degli
      * individui di Elite
-     * @return newPopolazione seleziona e accoppiata e mutata/ o ritorna solo la
-     * mating Pool? TODO
+     * @return matingPool piscina d'accoppiamento degli individui
+     * 
      */
-    public void rouletteWheelSelection(ArrayList<LineaDeformabile> newPopolazione, ArrayList<LineaDeformabile> oldPopolazione) {
+    public ArrayList<LineaDeformabile> rouletteWheelSelection(ArrayList<LineaDeformabile> newPopolazione, ArrayList<LineaDeformabile> oldPopolazione) {
 
         Random r, rDiv;
         r = new Random();
@@ -493,31 +500,7 @@ public class Popolazione {
 
             //Devo generare dei numeri random con millesimali...  la prendo per buona cosi ma può
             //essere migliorata notevolmente   ||| È FONDAMENTALE QUESTO PASSO |||. 
-            switch (rDiv.nextInt(5)) {
-                case 0:
-                    //     System.out.println("sto in 0");
-                    randomSelecter = (Double) r.nextDouble() / 10;
-                    break;
-                case 1:
-                    //   System.out.println("sto in 1");
-                    randomSelecter = (Double) r.nextDouble() / 10;
-                    break;
-                case 2:
-                    // System.out.println("sto in 2");
-                    randomSelecter = (Double) r.nextDouble() / 100;
-                    break;
-                case 3:
-                    //  System.out.println("sto in 3");
-                    randomSelecter = (Double) r.nextDouble() / 100;
-                    break;
-                case 4:
-                    // System.out.println("sto in 4");
-                    randomSelecter = (Double) r.nextDouble() / 1000;
-                    break;
-                default:
-                    System.out.println("errore random selecter");
-                    break;
-            }
+            randomSelecter = generaRandomSelecter(rDiv,r);
 
             // devo selezionare individuo estratto dal numero randomico.
             for (int j = 0; j < oldPopolazione.size() - 1; j++) {
@@ -538,11 +521,62 @@ public class Popolazione {
             //   System.out.println("random number " + randomSelecter);
         }
 
+        System.out.println("SOMMA DELLE PROBABILITÀ DI SELEZIONE ( DEVE ESSERE UGUALE A 1 )");
+        Double provaSel = 0.0;
+        for (Double giro : probSel) {
+            provaSel = provaSel + giro;
+        }
+
+        System.out.println("");
+        System.out.println(provaSel);
+        System.out.println("");
+
         System.out.println("INDIVIDUI NELLA MATING POOL");
         for (LineaDeformabile giro : matingPool) {
             System.out.println(" fintess individuo nella mating pool  " + giro.getVal_fitness());
         }
         System.out.println("popolazione attuale selezionata " + contPOP + "   Val Delta S " + deltaS);
+
+        return matingPool;
+        
+    }
+
+    
+    /**
+     * Genera il numero randomico per la selezione dell'individuo da immettere
+     * nella matingPool
+     * @param rDiv generatore randomico per la selezione del tipo di divisione
+     * @param r generatore randomico che genera il double per la selezione
+     * @return randomSelecter il numero che porta alla selezione dell'individuo
+     */
+    private Double generaRandomSelecter(Random rDiv, Random r) {
+        switch (rDiv.nextInt(5)) {
+            case 0:
+                //     System.out.println("sto in 0");
+                return (Double) r.nextDouble() / 10;
+       //         break;
+            case 1:
+                //   System.out.println("sto in 1");
+                return (Double) r.nextDouble() / 10;
+             //   break;
+            case 2:
+                // System.out.println("sto in 2");
+                return (Double) r.nextDouble() / 100;
+        //       break;
+            case 3:
+                //  System.out.println("sto in 3");
+                return (Double) r.nextDouble() / 100;
+             //   break;
+            case 4:
+                // System.out.println("sto in 4");
+               return (Double) r.nextDouble() / 1000;
+              //  break;
+            default:
+                System.out.println("errore random selecter");
+                return 9999999.0;
+             
+              //  break;
+        }
 
     }
 }
