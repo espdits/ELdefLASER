@@ -151,7 +151,7 @@ public class DeformazioneLaser {
      *
      * @throws java.io.IOException
      */
-    public void loop2() throws IOException {
+    public void loop2() throws IOException, Exception {
         int[] pos = {22, 28, 32, 37, 45};
 
         //inizializzazione Arraylist
@@ -189,7 +189,7 @@ public class DeformazioneLaser {
         }
     }
 
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) throws IOException, Exception {
         DeformazioneLaser instance = new DeformazioneLaser();
         instance.loop2();
         //ATTUALMENTE, SE LANCIATA VA IN LOOP INFINITO NON ESSENDOCI CONDIZIONI DI USCITA!!!

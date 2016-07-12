@@ -19,6 +19,9 @@ public class LineaDeformabile {
     private Map<Integer, Quadrato> quadrati_deformati = new TreeMap(); //la treemap mantiene i quadrati ordinati e ha tempo di accesso log(n)
     public final int lunghezza_linea = 50; //da definire caso per caso
     private Double val_fitness;
+    private String name;
+
+
     
     public LineaDeformabile(){
         this.val_fitness=0.0;
@@ -37,6 +40,11 @@ public class LineaDeformabile {
         return hash;
     }
 
+
+    
+    
+    
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -130,6 +138,34 @@ public class LineaDeformabile {
     public void setVal_fitness(Double val_fitness) {
         this.val_fitness = val_fitness;
     }
+
+    /**
+     * Ritorna il nome dell'individuo
+     * @return Nome individuo
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Permette l'immisione del nome dell'individuo per un controllo migliore
+     * @param name nome dell'individuo
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Setta i quadrati deformati 
+     * @param quadrati_deformati quadrati deformati da settare
+     */
+    public void setQuadrati_deformati(Map<Integer, Quadrato> quadrati_deformati) {
+        this.quadrati_deformati = quadrati_deformati;
+    }
+    
+    
+    
+    
     
     
     
