@@ -181,10 +181,19 @@ public class DeformazioneLaser {
         //QUI entra e va a creare la seconda popolazione
         secondaPopolazione = pop.nextPopolazione(primaPopolazione);
         // stampa controllo
+        
+        //Aggiornamento Fitness nuova popolazione
+        for(LineaDeformabile lineaDef2 : secondaPopolazione){
+            lineaDef2.setVal_fitness(pop.valFitness(linea, lineaDef2));
+        }
+        
+        
+        
+        
         int i = 1;
         for (LineaDeformabile lineadef : secondaPopolazione) {
 
-            System.out.println("valori nel vettore di array piu grandi " + i + " con valore " + lineadef.getVal_fitness());
+            System.out.println("valori nel vettore di array 2 popolazione " + i + " con valore " + lineadef.getVal_fitness());
             i++;
         }
     }
