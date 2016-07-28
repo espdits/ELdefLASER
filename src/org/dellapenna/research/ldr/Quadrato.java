@@ -35,6 +35,8 @@ public class Quadrato {
         if (getClass() != obj.getClass()) {
             return false;
         }
+        
+        
         final Quadrato other = (Quadrato) obj;
         if (Double.doubleToLongBits(this.deformazione) != Double.doubleToLongBits(other.deformazione)) {
             return false;

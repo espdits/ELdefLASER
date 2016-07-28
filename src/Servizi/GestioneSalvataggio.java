@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.dellapenna.research.ldr.LineaDeformabile;
@@ -25,15 +26,15 @@ import org.dellapenna.research.ldr.Quadrato;
  */
 public abstract class GestioneSalvataggio {
 
-    public static void salvaDATA(ArrayList<LineaDeformabile> primaPopolazione, int contatoreMosse) throws IOException {
+    public static void salvaDATA(HashMap<Integer,LineaDeformabile> popolazone, int contatoreMosse, String nome_file) throws IOException {
 
         // Salvo i valori che devo salvare in una struttura dati di facile gestione.
-        int matr_valori[][] = new int[primaPopolazione.size()][contatoreMosse];
-        String matr_mod[][] = new String[primaPopolazione.size()][contatoreMosse];
+        int matr_valori[][] = new int[popolazone.size()][contatoreMosse];
+        String matr_mod[][] = new String[popolazone.size()][contatoreMosse];
         double[] contFitness;
-        contFitness = new double[primaPopolazione.size()];
+        contFitness = new double[popolazone.size()];
         //Stampa valori su schermo e riempe matrice di valori e arraylist val_fitness
-        riempiMatr(matr_valori, matr_mod, primaPopolazione, contFitness);
+        riempiMatr(matr_valori, matr_mod, popolazone, contFitness);
 
         Workbook wb = new HSSFWorkbook();
         //Creo foglio Excel 
@@ -145,7 +146,7 @@ public abstract class GestioneSalvataggio {
 
 // genero una file excel dove ogni riga rappresenta l'indiviuo creato.
         //facciamo per 2 per una maggiore leggibilità dei dati nel file creato
-        for (int numRighe = 0; numRighe <= (2 * primaPopolazione.size()); numRighe++) {
+        for (int numRighe = 0; numRighe <= (2 * popolazone.size()); numRighe++) {
 
             Row row = sh.createRow(numRighe);
             for (int cellnum = 0; cellnum < contatoreMosse + 2; cellnum++) {
@@ -348,7 +349,7 @@ public abstract class GestioneSalvataggio {
         }
 
         try ( // Output file
-                FileOutputStream out = new FileOutputStream("/home/gianni/Documenti/PRIMAPOP.xls")) {
+                FileOutputStream out = new FileOutputStream("/home/gianni/Documenti/output/" + nome_file + ".xls")) {
             wb.write(out);
             out.close();
         }
@@ -368,14 +369,14 @@ public abstract class GestioneSalvataggio {
   } 
 }
      */
-    private static void riempiMatr(int[][] matr_valori, String[][] matr_mod, ArrayList<LineaDeformabile> primaPopolazione, double[] contFitness) {
-        for (int f = 0; f < primaPopolazione.size(); f++) {
+    private static void riempiMatr(int[][] matr_valori, String[][] matr_mod, HashMap<Integer,LineaDeformabile> popolazione, double[] contFitness) {
+        for (int f = 0; f < popolazione.size(); f++) {
 
             int index = 0;
-            Map map = primaPopolazione.get(f).getQuadratiDeformati();
+            Map map = popolazione.get(f).getQuadratiDeformati();
 
             //riempio vettore di fitness
-            contFitness[f] = primaPopolazione.get(f).getVal_fitness();
+            contFitness[f] = popolazione.get(f).getVal_fitness();
 
             // Costruisce l'iteratore con il metodo dedicato
             Iterator it = map.entrySet().iterator();

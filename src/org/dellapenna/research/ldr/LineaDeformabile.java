@@ -11,7 +11,7 @@ import java.util.TreeMap;
  codifica la linea isDeformabile formata da quadrati consecutivi
  *
  */
-public class LineaDeformabile {
+public class LineaDeformabile implements Cloneable{
 
     public static final int threshold_tempo_modifica = 1;
     private static final Quadrato quadrato_default = new Quadrato();
@@ -162,11 +162,24 @@ public class LineaDeformabile {
     public void setQuadrati_deformati(Map<Integer, Quadrato> quadrati_deformati) {
         this.quadrati_deformati = quadrati_deformati;
     }
-    
-    
-    
-    
-    
-    
-    
+ 
+    @Override
+    public Object clone() {
+        try {
+                return super.clone();
+	    } catch (CloneNotSupportedException e) {
+		e.printStackTrace();
+		return null;
+	    }
+	}
+
+
+          ///
+  /*  private Map<Integer, Quadrato> quadrati_deformati = new TreeMap(); //la treemap mantiene i quadrati ordinati e ha tempo di accesso log(n)
+    public final int lunghezza_linea = 50; //da definire caso per caso
+    private Double val_fitness;
+    private String name;*/
+  
+
 }
+    
