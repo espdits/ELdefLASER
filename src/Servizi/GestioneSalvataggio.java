@@ -391,12 +391,12 @@ public abstract class GestioneSalvataggio {
                 Quadrato aux;
                 aux = (Quadrato) entry.getValue();
 
-                System.out.println("Key = " + entry.getKey() + "          Tipo di modifica = " + aux.nome_def);
+        //        System.out.println("Key = " + entry.getKey() + "          Tipo di modifica = " + aux.nome_def);
                 matr_valori[f][index] = (int) entry.getKey();
                 matr_mod[f][index] = (String) aux.nome_def;
                 index++;
             }
-            System.out.println("|||||||||||||||||||||||||||||||||| " +"Individuo "+ (f+1) + " ------ VAL_FITNESS: "+ contFitness[f]+ " |||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+     //       System.out.println("|||||||||||||||||||||||||||||||||| " +"Individuo "+ (f+1) + " ------ VAL_FITNESS: "+ contFitness[f]+ " |||||||||||||||||||||||||||||||||||||||||||||||||||||||");
         }
     }
 

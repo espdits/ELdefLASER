@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
+
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -27,7 +27,10 @@ public class Popolazione {
     final int contatoreMosse = 5;
 
     //Variabile che imposta la dimensione della popolazione
-    final int dimPopolazione = 50;
+    final int dimPopolazione = 1000;
+    
+    //Variabile da impostare che determina la lunghezza della linea ( veloce per test ) 
+    final int lungLinea = 50;
 
     // numero che influisce sulla funzione di fitness come la differenza dalla posizione da modificare
     // e il quadrato modificato 
@@ -38,13 +41,13 @@ public class Popolazione {
     final int selELit = 6;
 
     //ArrayList salvataggio prima popolazione 
-    HashMap<Integer, LineaDeformabile> primaPOP = new HashMap<>();
+    private HashMap<Integer, LineaDeformabile> primaPOP = new HashMap<>();
     
-    HashMap<Integer, LineaDeformabile> matingPool = new HashMap<>();
+    private HashMap<Integer, LineaDeformabile> matingPool = new HashMap<>();
     
-    HashMap<Integer, LineaDeformabile> newPop = new HashMap<>();
+    private HashMap<Integer, LineaDeformabile> newPop = new HashMap<>();
     
-    HashMap<Integer, LineaDeformabile> oldPopolazione = new HashMap<>();
+    private HashMap<Integer, LineaDeformabile> oldPopolazione = new HashMap<>();
     
     
     
@@ -388,8 +391,6 @@ public class Popolazione {
     /**
      * Metodo che crea una generazione successiva a quella data come input
      *
-     * @param oldPopolazione vecchia popolazione (generazione) di linee
-     * Deformabili
      */
     public void nextPopolazione() throws Exception {
 
@@ -429,13 +430,13 @@ public class Popolazione {
      
         crossover_mutazione();
          
-        System.out.println("newPop size " + newPop.size());
+      //  System.out.println("newPop size " + newPop.size());
         //Stampo della new popolazione 
-        for(Map.Entry entry_newPop: newPop.entrySet()){
+    /*    for(Map.Entry entry_newPop: newPop.entrySet()){
             LineaDeformabile aux = new LineaDeformabile();
             aux= (LineaDeformabile) entry_newPop.getValue();
             System.out.println("newPOP : " + aux.getName());
-        }
+        }*/
         
         
         
@@ -531,7 +532,7 @@ public class Popolazione {
                         LineaDeformabile lineaDefOld = (LineaDeformabile) entry_lineaDefOld.getValue();
                         //  System.out.println("linea 1 " + lineaDefOld.getName() + "linea 2 "+ lDef.getName());
                         if (lineaDefOld.equals(lDef) && !(arrayPos.contains(pos))) {
-                            System.out.println("TROVATA");
+          //                  System.out.println("TROVATA");
                             arrayPos.add(pos);
                             selector=false;
                         }
@@ -545,7 +546,7 @@ public class Popolazione {
      
      
         for(Integer num: arrayPos){
-            System.out.println("posizione la quale verrà rimossa " + num);
+    //        System.out.println("posizione la quale verrà rimossa " + num);
             oldPopolazione.remove(num);
         }
                        
@@ -648,9 +649,9 @@ public class Popolazione {
         //ArrayList ordinato e prendo ultimo elemento che è il piu piccolo per effettuare una statistica
         // con valori tutti > 0
         fitnessMIN = oldPopolazione.get(oldPopolazione.size()-1).getVal_fitness();
-        System.out.println("");
-        System.out.println("fitness minimo " + fitnessMIN);
-        System.out.println("");
+   //     System.out.println("");
+     //   System.out.println("fitness minimo " + fitnessMIN);
+     //  System.out.println("");
       /*  for(Map.Entry entry_lineadef: oldPopolazione.entrySet()){
             LineaDeformabile lineadef = (LineaDeformabile) entry_lineadef.getValue();
             System.out.println("prova stampa fintess valutazione linea nome:  " + lineadef.getName() + " valore " + lineadef.getVal_fitness());
@@ -700,7 +701,7 @@ public class Popolazione {
           //  LineaDeformabile lineaDeformabile= (LineaDeformabile) oldPopolazione.get(j);
             LineaDeformabile lineaDeformabile = (LineaDeformabile) entry_lineadef.getValue();
             probSel[i] = lineaDeformabile.getVal_fitness() / deltaS;
-            System.out.println("probabilita di selezione " + probSel[i]);
+    //        System.out.println("probabilita di selezione " + probSel[i]);
             lineaDeformabile=null;
             i++;
         }
@@ -716,21 +717,21 @@ public class Popolazione {
             }
         }
         
-        System.out.println("");
+ //       System.out.println("");
         // stampa di prova
-        for(Double aux : roulSel){
+ /*       for(Double aux : roulSel){
             System.out.println("roul sel " + aux);
-        }
+        }*/
           
-        System.out.println("");
+ //       System.out.println("");
         //contatore che mi fa da chiave dell'hashmap della mating pool
         int conHM = 0;  
         // finche non estraggo tutti gli elementi della vecchia popolazione
         //TODO perfezionare qui
         while (oldPopolazione.size() != matingPool.size()) {
             
-            System.out.println("");
-            System.out.println("while mating pool roulette wheel selection \n oldpopolazione " + oldPopolazione.size() + " \n mating size  "  + matingPool.size());
+  //          System.out.println("");
+  //          System.out.println("while mating pool roulette wheel selection \n oldpopolazione " + oldPopolazione.size() + " \n mating size  "  + matingPool.size());
 
             //Devo generare dei numeri random con millesimali...  la prendo per buona cosi ma può
             //essere migliorata notevolmente   ||| È FONDAMENTALE QUESTO PASSO |||. 
@@ -756,8 +757,8 @@ public class Popolazione {
                 if (randomSelecter < roulSel[j + 1] && randomSelecter > roulSel[j]) {
                     
                     
-                    System.out.println("j+1: " + roulSel[j+1]+ "  j: "+ roulSel[j]);
-                    System.out.println("random SELECTER selezionato: "+ randomSelecter);
+  //                  System.out.println("j+1: " + roulSel[j+1]+ "  j: "+ roulSel[j]);
+   //                 System.out.println("random SELECTER selezionato: "+ randomSelecter);
                 
                     // per aggiornare al fitness reale
                     Double valFitnessWork = fitnessUPD[j];
@@ -768,12 +769,12 @@ public class Popolazione {
                     matingPool.put(conHM,lineaDefWork);
                  
                      
-                    System.out.println("pos: " + conHM + " indivuo in mating POOOOOOLLL " + lineaDefWork.toString());
+             //       System.out.println("pos: " + conHM + " indivuo in mating POOOOOOLLL " + lineaDefWork.toString());
                     conHM++;
                     contatore++;
-                    System.out.println("");
-                    System.out.println("numeri individui inseriti in mating pool " + contatore);
-                    System.out.println("");
+              //      System.out.println("");
+               //     System.out.println("numeri individui inseriti in mating pool " + contatore);
+                 //   System.out.println("");
 
                 }
                 
@@ -913,7 +914,7 @@ public class Popolazione {
         for(Map.Entry entry_lineaD: matingPool.entrySet()){
             LineaDeformabile aux = new LineaDeformabile();
             aux = (LineaDeformabile) entry_lineaD.getValue();
-            System.out.println("mating pool name " + aux.toString());
+         //   System.out.println("mating pool name " + aux.toString());
         }
        
        
@@ -922,7 +923,7 @@ public class Popolazione {
         //Prendo due elementi sequenziali della matingPool
         //stessi quadrati stessa posizione scoppia.
         while (!matingPool.isEmpty()) {
-            System.out.println("mutazione e crossover mating pool while size" + matingPool.size());
+  //          System.out.println("mutazione e crossover mating pool while size" + matingPool.size());
 
         //    System.out.println("");
       //      System.out.println("|||||||||||||||||||||Iterazione NUMERO " + iterazione + "  |||||||||||||||||||||||||||");
@@ -958,11 +959,11 @@ public class Popolazione {
             //Copio le linee 
             LineaDeformabile L1;
             L1 = matingPool.remove(iterazione_plus);
-            System.out.println("stampo elemento L1 mating pool " + L1.toString());
+    //        System.out.println("stampo elemento L1 mating pool " + L1.toString());
             
             LineaDeformabile L2;
             L2 = matingPool.remove(iterazione_plus+1);
-            System.out.println("stampo elemento L2 mating pool " + L2.toString());
+   //         System.out.println("stampo elemento L2 mating pool " + L2.toString());
 
             //numeri quadrati deformati di ogni linea
             int rangeL1, rangeL2;
@@ -1086,7 +1087,7 @@ public class Popolazione {
                 Integer ind = iterazione_plus;
                 ind=ind+selELit; //inizio dall'indice dopo gli elementi aggiunti all'elitarismo
                 Integer ind2 = ind+1;
-                System.out.println("ind : " + ind + " ind2 : " + ind2);
+        //        System.out.println("ind : " + ind + " ind2 : " + ind2);
                 newPop.put(ind,L1);
                 newPop.put(ind2,L2);
                 
@@ -1100,14 +1101,14 @@ public class Popolazione {
                 Integer ind = iterazione_plus;
                 ind=ind+selELit; //inizio dall'indice dopo gli elementi aggiunti all'elitarismo
                 Integer ind2 = ind+1;
-                System.out.println("ind : " + ind + " ind2 : " + ind2);
+   //             System.out.println("ind : " + ind + " ind2 : " + ind2);
                 newPop.put(ind,L1);
                 newPop.put(ind2,L2);
             }
             iterazione++;
             iterazione_plus=iterazione_plus+2;
-            System.out.println("");
-            System.out.println("iterazione plus "  + iterazione_plus);
+     //       System.out.println("");
+     //       System.out.println("iterazione plus "  + iterazione_plus);
         }
         //controllo la dimensione degli individui della nuova popolazione
      //   System.out.println("");
@@ -1159,8 +1160,8 @@ public class Popolazione {
             if (elementiL1.contains(pos2)) {
                 //aggiorno la posizione presente in pos2
                 do {
-                    //evito lo zero e includo il la size.
-                    newPos = ((newPos + 2) % dimPopolazione) + 1;
+                    //evito lo zero e includo il la size !!! importante !!! size deve essere stessa lunghezza delle linea deformabile.
+                    newPos = ((newPos + 2) % lungLinea) + 1;
                     //Finche non ho elementi non contenuti ne in L1 ne in L2    
                 } while ((elementiL1.contains(newPos)) || (elementiL2.contains(newPos)) || (elementiNewL2.contains(newPos)));
                 //  newQuadratiL2.add(newPos);

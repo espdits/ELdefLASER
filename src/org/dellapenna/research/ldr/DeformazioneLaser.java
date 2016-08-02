@@ -46,7 +46,7 @@ public class DeformazioneLaser {
     Random rq = new Random(); //per le prove
     Random rm = new Random(); //per le prove
 
-    int X = 50; // generazione che devo creare
+    int X = 100; // generazione che devo creare
 
     //determina le prossime mosse valide da applicare allo stato corrente. Dovrebbe enumerarle o usare delle euristiche
     //per capire quelle più opportune. In questo esempio procediamo a caso...
