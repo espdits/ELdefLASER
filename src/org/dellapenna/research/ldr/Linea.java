@@ -18,6 +18,9 @@ public class Linea {
     ///
     private Map<Integer, Quadrato> quadrati_deformati = new TreeMap(); //la treemap mantiene i quadrati ordinati e ha tempo di accesso log(n)
     public final int lunghezza_linea = 50; //da definire caso per caso
+    
+    public final int quad_deformati = 7;
+    
 
     //Metodo che permette la realizzazione di una linea Deformabile con X quadrati modificati
     public void createManualLine(Linea linea, int[] pos) {
@@ -124,6 +127,25 @@ public class Linea {
         public Map<Integer, Quadrato> getQuadratiDeformati(){
         return quadrati_deformati;
     }
+        
+        
+    /**
+     * Genera la fitness della linea
+     * @return fitness della Linea da Generare
+     */    
+        
+       public Double fitnessLinea(){
+           Double ris ;
+           
+           ris=0.8*quad_deformati;
+           
+           return ris;
+           
+           
+       }
+        
+        
+        
     }
     
     
