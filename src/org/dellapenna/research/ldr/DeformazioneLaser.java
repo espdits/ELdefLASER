@@ -21,12 +21,11 @@ import org.jfree.ui.RefineryUtilities;
  */
 public class DeformazioneLaser {
 
-    //Insieme di Individui creati prima poplazione.
-  //  ArrayList<LineaDeformabile> currentPop = new ArrayList<>();
-    //Insieme di Individui creati per la seconda popolazione
- //   ArrayList<LineaDeformabile> previousPop = new ArrayList<>();
 
+    // Popolazione corrente 
     HashMap<Integer, LineaDeformabile> currentPop = new HashMap<>();
+    
+    // Popolazione precedente alla corrente
     HashMap<Integer, LineaDeformabile> previousPop = new HashMap<>();
     
     final static int X = 100; // generazione che devo creare
@@ -41,13 +40,13 @@ public class DeformazioneLaser {
 
     //l'insieme degli stati esplorati contiene le firme (hashCode) di tutti gli stati già valutati
     Set<Integer> esplorati = new HashSet(500);
+   
     //la dinamica (inversa) costruita durante l'esplorazione. Necessaria per poter ricostruire il piano di lavoro
     //una volta raggiunto l'obiettivo.
     //QUESTA STRUTTURA DOVREBBE ANDARE SU DISCO
     Map<Integer, List<MossaStato>> dinamica_inversa = new HashMap<>();
 
-    //Struttura dati che salva le popolazioni ( composte da 50 individui ognuna )
-    //Map<Integer, ArrayList<LineaDeformabile>> popolazioni = new HashMap<>();
+
 
     Random rq = new Random(); //per le prove
     Random rm = new Random(); //per le prove
@@ -164,6 +163,7 @@ public class DeformazioneLaser {
      * LOOP2 metodo per generare una popolazione salvare lavori valutare con la
      * funzione di fitness e risalvare valori
      *
+     * @param mediaFitnessPOP variabile per stampa grafica media Fitness di ogni popolazione
      * @throws java.io.IOException
      */
     public void loop2(Double[] mediaFitnessPOP) throws IOException, Exception {
@@ -178,20 +178,21 @@ public class DeformazioneLaser {
         
         
         
-        //inizializzazione Arraylist
+        //inizializzazione 
         Popolazione pop = new Popolazione();
+        
         //creo linea
         Linea linea = new Linea();
         linea.createManualLine(linea, pos);
         linea.stampaLinea(linea);
+        
         //creo prima popolazione
-        //TODO PRIMA POPOLAZIONE RISULTA VUOTO RISOLVERE!!! 
         pop.creaPopolazione();
         previousPop = pop.getPrimaPOP();
 
         //confronto le linee della popolazione con la linea generata e valuto il fitness
         for (Map.Entry entry_lineaDef : previousPop.entrySet()) {
-            //entry_lineaDef.getValue().setVal_fitness(pop.valFitness(linea, lineaDef));
+
             LineaDeformabile lineaWork = (LineaDeformabile) entry_lineaDef.getValue();
             lineaWork.setVal_fitness(pop.valFitness(linea, lineaWork));
             media = media + lineaWork.getVal_fitness();
@@ -200,20 +201,18 @@ public class DeformazioneLaser {
         
         mediaFitnessPOP[istanza-1]= (Double) media / pop.dimPopolazione;
        
-        System.out.println("media popolazione X : [" + (istanza-1) + "] =  " + mediaFitnessPOP[istanza-1]);
+    //    System.out.println("media popolazione X : [" + (istanza-1) + "] =  " + mediaFitnessPOP[istanza-1]);
         
         GestioneSalvataggio.salvaDATA(previousPop, pop.getContatoreMosse(), "primaPOP");
 
-      //  pop.nextPopolazione(previousPop);
+     
         
-        
-        //Aggiungo la prima popolazione alla MAPPA popolazioni
-        //popolazioni.put(istanza, currentPop);
+      
 
         //Devo creare una nuova popolazione dalla precedente:
         //  1 APPLICO ELITARISMO 
         //  2 APPLICO ROULETTE WHEEL SELECTION
-        //  3 APPLICO PARENT SELECTION
+        //  3 APPLICO PARENT SELECTION ( non creata ) 
         //  4 CROSS-OVER
         //  5 MUTAZIONE
         //Devo fare un ciclo che mi va a creare X popolazioni 
@@ -234,33 +233,12 @@ public class DeformazioneLaser {
             
             
             
-     //       System.out.println("test 1 dopo integer to string");
-            // Devo creare una ArrayList che mi salva la popolazione da far evolvere
-        //    ArrayList<LineaDeformabile> nextPopolazione;
-          //  nextPopolazione = new ArrayList<>();
-
-          //TODO sistemare per ottenere ordine logico tra current e previous
-          
-          
-            // Devo creare una ArrayList che mi salva la popolazione corrente  
-          //  ArrayList<LineaDeformabile> currentPopolazione;
-         //   currentPopolazione = new ArrayList<>();
-         //   currentPopolazione = popolazioni.get(istanza);
-
-          // System.out.println("test 2 dopo popolazioni.get ");
-            // calcolo la prossima popolazione dalla precedente
-            
+   
             nextPop.setOldPopolazione(previousPop);
             nextPop.nextPopolazione();
             currentPop= nextPop.getNewPop();
    
-            // pop.setOldPopolazione(previousPop);
-           // pop.nextPopolazione();
-         //   currentPop= pop.getNewPop();
-         
-        //    System.out.println("test 3 dopo nextPopolazione ");
-             
-            //aggiorno fitness popolazione creata
+       
             for (Map.Entry entry_lineaDef : currentPop.entrySet()) {
                 LineaDeformabile lineaWork = (LineaDeformabile) entry_lineaDef.getValue();
                 lineaWork.setVal_fitness(pop.valFitness(linea, lineaWork));
@@ -268,20 +246,10 @@ public class DeformazioneLaser {
                 
             }
             
-       //     System.out.println("test 4 dopo il for aggiorna fitness ");
 
-            //aggiorno contatore istanza
-     //       istanza++;
-       //     System.out.println(" istanza dopo aumento " + istanza);
-            //Salvo nella mappa popolazioni
-
-          //  popolazioni.put(istanza, nextPopolazione);
-
-          //  System.out.println("test 5 popolazioni.put nuova popolazione creata ");
-        
         mediaFitnessPOP[istanza]= (Double) media / nextPop.dimPopolazione;
        
-        System.out.println("media popolazione X : [" + istanza + "] =  " + mediaFitnessPOP[istanza]);
+       // System.out.println("media popolazione X : [" + istanza + "] =  " + mediaFitnessPOP[istanza]);
         
    
           
@@ -293,38 +261,21 @@ public class DeformazioneLaser {
             
             GestioneSalvataggio.salvaDATA(currentPop, pop.getContatoreMosse(), file_name);
 
-            //System.gc();
+       
             previousPop=null;
             previousPop=currentPop;
             currentPop=null;
         }
 
-        /*
-        //QUI entra e va a creare la seconda popolazione
-        secondaPopolazione = pop.nextPopolazione(primaPopolazione);
-        // stampa controllo
 
-        //Aggiornamento Fitness nuova popolazione
-        for (LineaDeformabile lineaDef2 : secondaPopolazione) {
-            lineaDef2.setVal_fitness(pop.valFitness(linea, lineaDef2));
-        }
-
-        int i = 1;
-        for (LineaDeformabile lineaDef : secondaPopolazione) {
-
-            System.out.println("valori nel vettore di array 2 popolazione " + i + " con valore " + lineaDef.getVal_fitness());
-            i++;
-        }
-
-        GestioneSalvataggio.salvaDATA(secondaPopolazione, pop.getContatoreMosse(), "secondaPOP");
-         */
     }
 
     public static void main(String args[]) throws IOException, Exception {
         
         //Dati fitness di ogni popolazione in media
         Double[] mediaFitnessPOP = new Double[X];
-        // fitnessLinea calcolata manualmente:
+        
+        // fitnessLinea ( per ora )  calcolata manualmente:
         //      0.8 è il valore del quadrato nella posizione giusta
         //      7 sono i quadrati che ho modificato nella linea da Generare.
         Double fitnessLinea = 0.8*7;
@@ -343,6 +294,6 @@ public class DeformazioneLaser {
         RefineryUtilities.centerFrameOnScreen(grfc);
 
         grfc.setVisible(true);
-        //ATTUALMENTE, SE LANCIATA VA IN LOOP INFINITO NON ESSENDOCI CONDIZIONI DI USCITA!!!
+        
     }
 }
