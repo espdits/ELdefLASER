@@ -161,7 +161,7 @@ public class DeformazioneLaser {
      * @throws java.io.IOException
      */
     public void loop2() throws IOException, Exception {
-        int[] pos = {22, 28, 32, 37, 45};
+        int[] pos = {22, 28, 32, 37, 45 , 12, 35};
 
         int istanza = 1; // istanza della popolazione inizializzata a 1
 

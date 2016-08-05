@@ -29,6 +29,8 @@ public class Linea {
         linea.deforma(Mossa.b_s, pos[2]);
         linea.deforma(Mossa.b_s, pos[3]);
         linea.deforma(Mossa.b_s, pos[4]);
+        linea.deforma(Mossa.b_s, pos[5]);
+        linea.deforma(Mossa.b_s, pos[6]);
         
     }
 

@@ -24,7 +24,7 @@ import java.util.TreeSet;
 public class Popolazione {
 
     //Variabile che conta le mosse da effettuare per creare la prima popolazione
-    final int contatoreMosse = 5;
+    final int contatoreMosse = 7;
 
     //Variabile che imposta la dimensione della popolazione
     final int dimPopolazione = 1000;

@@ -159,7 +159,14 @@ public abstract class GestioneSalvataggio {
                 //Etichette pos(0,n)
                 if (numRighe == 0 && cellnum > 0) {
                     Cell cell = row.createCell(cellnum);
-                    switch (cellnum) {
+                    if (cellnum <= contatoreMosse) {
+                        cell.setCellValue("POS/MOD");
+                        cell.setCellStyle(yellow);
+                    } else if (cellnum == contatoreMosse + 1) {
+                        cell.setCellValue("Val. Fitness");
+                        cell.setCellStyle(red);
+                    }
+                    /*  switch (cellnum) {
                         case 1:
                             cell.setCellValue("POS/MOD");
                             cell.setCellStyle(yellow);
@@ -187,8 +194,9 @@ public abstract class GestioneSalvataggio {
                         default:
                             System.out.print("Errore cella file!");
 
-                    }
+                    }*/
                 }
+
 
                 // Celle contenenti il numero dell'individuo
                 if (cellnum == 0 && numRighe > 0) {
@@ -219,8 +227,28 @@ public abstract class GestioneSalvataggio {
                 //riempo di dati!!!!!!
                 if (cellnum > 0 && numRighe > 0 && cellnum <= contatoreMosse) {
                     Cell cell = row.createCell(cellnum);
-                    switch (cellnum) {
+                    if (numRighe % 2 != 0) {
+                        cell.setCellValue(matr_valori[individuo_index - 1][cellnum - 1]);
+                        if (individuo_index % 2 != 0) {
+                            cell.setCellStyle(blue_pos);
+                        } else {
+                            cell.setCellStyle(green_pos);
+                        }
+
+                    } else {
+                        //Parte Tipo di modifica
+                        String aux = matr_mod[aux_valori_index - 1][cellnum - 1];
+                        cell.setCellValue(aux);
+                        if (aux_valori_index % 2 != 0) {
+                            cell.setCellStyle(blue_mod);
+                        } else {
+                            cell.setCellStyle(green_mod);
+                        }
+
+                    }
+                    /*switch (cellnum) {
                         default:
+                            //Dovrebbe funzionare soltanto con un caso. Quindi senza Switch case.
                             System.err.println("errore riempimento dati foglio excel VALORIs");
                         case 1:
                             if (numRighe % 2 != 0) {
@@ -333,7 +361,7 @@ public abstract class GestioneSalvataggio {
                             }
                             break;
 
-                    }
+                    }*/
 
                 }
                 if (numRighe > 0 && cellnum > contatoreMosse ) {
