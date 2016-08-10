@@ -179,19 +179,6 @@ public class GraficoJ extends ApplicationFrame {
         return chart;
 
     }
-    /*
-    public static void main(final String[] args) {
 
-        final GraficoALinea demo = new GraficoALinea(
-        “Grafici al gusto di caffè
-        ”);
-
-demo.pack();
-
-        RefineryUtilities.centerFrameOnScreen(demo);
-
-        demo.setVisible(true);
-
-    }*/
 
 }

@@ -275,6 +275,7 @@ public class DeformazioneLaser {
         //Dati fitness di ogni popolazione in media
         Double[] mediaFitnessPOP = new Double[X];
         
+        
         // fitnessLinea ( per ora )  calcolata manualmente:
         //      0.8 è il valore del quadrato nella posizione giusta
         //      7 sono i quadrati che ho modificato nella linea da Generare.
@@ -288,11 +289,8 @@ public class DeformazioneLaser {
         //Grafico dati
         final GraficoJ grfc;
         grfc = new GraficoJ("Grafico media fitness e generazioni", mediaFitnessPOP, fitnessLinea);
-
         grfc.pack();
-
         RefineryUtilities.centerFrameOnScreen(grfc);
-
         grfc.setVisible(true);
         
     }

@@ -174,11 +174,7 @@ public class LineaDeformabile implements Cloneable{
 	}
 
 
-          ///
-  /*  private Map<Integer, Quadrato> quadrati_deformati = new TreeMap(); //la treemap mantiene i quadrati ordinati e ha tempo di accesso log(n)
-    public final int lunghezza_linea = 50; //da definire caso per caso
-    private Double val_fitness;
-    private String name;*/
+
   
 
 }
