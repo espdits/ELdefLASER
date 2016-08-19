@@ -3,6 +3,7 @@ package org.dellapenna.research.ldr;
 /*prova cambiamenti per git*/
 import Servizi.GestioneSalvataggio;
 import Servizi.GraficoJ;
+import Servizi.GraficoRandomSelecter;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -21,17 +22,14 @@ import org.jfree.ui.RefineryUtilities;
  */
 public class DeformazioneLaser {
 
-
     // Popolazione corrente 
     HashMap<Integer, LineaDeformabile> currentPop = new HashMap<>();
-    
+
     // Popolazione precedente alla corrente
     HashMap<Integer, LineaDeformabile> previousPop = new HashMap<>();
-    
-    final static int X = 100; // generazione che devo creare
-    
 
-    
+    final static int X = 100; // generazione che devo creare
+
     //la coda contiene gli stati (linee deformate e tempo corrente) da valutare
     //QUESTA STRUTTURA DOVREBBE ANDARE SU DISCO;
     //la coda contiene gli stati (linee deformate e tempo corrente) da valutare
@@ -40,18 +38,14 @@ public class DeformazioneLaser {
 
     //l'insieme degli stati esplorati contiene le firme (hashCode) di tutti gli stati già valutati
     Set<Integer> esplorati = new HashSet(500);
-   
+
     //la dinamica (inversa) costruita durante l'esplorazione. Necessaria per poter ricostruire il piano di lavoro
     //una volta raggiunto l'obiettivo.
     //QUESTA STRUTTURA DOVREBBE ANDARE SU DISCO
     Map<Integer, List<MossaStato>> dinamica_inversa = new HashMap<>();
 
-
-
     Random rq = new Random(); //per le prove
     Random rm = new Random(); //per le prove
-
-  
 
     //determina le prossime mosse valide da applicare allo stato corrente. Dovrebbe enumerarle o usare delle euristiche
     //per capire quelle più opportune. In questo esempio procediamo a caso...
@@ -157,35 +151,30 @@ public class DeformazioneLaser {
             }
         }
     }
-    
 
     /**
      * LOOP2 metodo per generare una popolazione salvare lavori valutare con la
      * funzione di fitness e risalvare valori
      *
-     * @param mediaFitnessPOP variabile per stampa grafica media Fitness di ogni popolazione
+     * @param mediaFitnessPOP variabile per stampa grafica media Fitness di ogni
+     * popolazione
      * @throws java.io.IOException
      */
     public void loop2(Double[] mediaFitnessPOP) throws IOException, Exception {
-        int[] pos = {22, 28, 32, 37, 45 , 12, 35};
-        
-
+        int[] pos = {22, 28, 32, 37, 45, 12, 35};
 
         double media = 0;
-        
+
         int istanza = 1; // istanza della popolazione inizializzata a 1
 
-        
-        
-        
         //inizializzazione 
         Popolazione pop = new Popolazione();
-        
+
         //creo linea
         Linea linea = new Linea();
         linea.createManualLine(linea, pos);
         linea.stampaLinea(linea);
-        
+
         //creo prima popolazione
         pop.creaPopolazione();
         previousPop = pop.getPrimaPOP();
@@ -196,18 +185,13 @@ public class DeformazioneLaser {
             LineaDeformabile lineaWork = (LineaDeformabile) entry_lineaDef.getValue();
             lineaWork.setVal_fitness(pop.valFitness(linea, lineaWork));
             media = media + lineaWork.getVal_fitness();
-            
-        }
-        
-        mediaFitnessPOP[istanza-1]= (Double) media / pop.dimPopolazione;
-       
-    //    System.out.println("media popolazione X : [" + (istanza-1) + "] =  " + mediaFitnessPOP[istanza-1]);
-        
-        GestioneSalvataggio.salvaDATA(previousPop, pop.getContatoreMosse(), "primaPOP");
 
-     
-        
-      
+        }
+
+        mediaFitnessPOP[istanza - 1] = (Double) media / pop.dimPopolazione;
+
+        //    System.out.println("media popolazione X : [" + (istanza-1) + "] =  " + mediaFitnessPOP[istanza-1]);
+        GestioneSalvataggio.salvaDATA(previousPop, pop.getContatoreMosse(), "primaPOP");
 
         //Devo creare una nuova popolazione dalla precedente:
         //  1 APPLICO ELITARISMO 
@@ -216,82 +200,67 @@ public class DeformazioneLaser {
         //  4 CROSS-OVER
         //  5 MUTAZIONE
         //Devo fare un ciclo che mi va a creare X popolazioni 
-        for (int istanza2 = 2; istanza2<X; istanza2++) {
+        for (int istanza2 = 2; istanza2 < X; istanza2++) {
 
             System.gc();
             System.runFinalization();
-            
+
             Popolazione nextPop;
             nextPop = new Popolazione();
-            media=0;
-            
+            media = 0;
+
             System.out.println("istanza n° " + istanza);
-            
+
             //Stringa per salvataggio nome file
             String file_name;
             file_name = Integer.toString(istanza);
-            
-            
-            
-   
+
             nextPop.setOldPopolazione(previousPop);
             nextPop.nextPopolazione();
-            currentPop= nextPop.getNewPop();
-   
-       
+            currentPop = nextPop.getNewPop();
+
             for (Map.Entry entry_lineaDef : currentPop.entrySet()) {
                 LineaDeformabile lineaWork = (LineaDeformabile) entry_lineaDef.getValue();
                 lineaWork.setVal_fitness(pop.valFitness(linea, lineaWork));
                 media = media + lineaWork.getVal_fitness();
-                
-            }
-            
 
-        mediaFitnessPOP[istanza]= (Double) media / nextPop.dimPopolazione;
-       
-       // System.out.println("media popolazione X : [" + istanza + "] =  " + mediaFitnessPOP[istanza]);
-        
-   
-          
-        istanza++;
-          
-          
+            }
+
+            mediaFitnessPOP[istanza] = (Double) media / nextPop.dimPopolazione;
+
+            // System.out.println("media popolazione X : [" + istanza + "] =  " + mediaFitnessPOP[istanza]);
+            istanza++;
 
             //Creo e salvo il file per ogni popolazione
-            
             GestioneSalvataggio.salvaDATA(currentPop, pop.getContatoreMosse(), file_name);
 
-       
-            previousPop=null;
-            previousPop=currentPop;
-            currentPop=null;
+            previousPop = null;
+            previousPop = currentPop;
+            currentPop = null;
         }
-
 
     }
 
     public static void main(String args[]) throws IOException, Exception {
-        
+
         //Dati fitness di ogni popolazione in media
         Double[] mediaFitnessPOP = new Double[X];
-        
-        
+        //Double[][] matrVectRandomSelecter = new Double[X][];
+
         // fitnessLinea ( per ora )  calcolata manualmente:
         //      0.8 è il valore del quadrato nella posizione giusta
         //      7 sono i quadrati che ho modificato nella linea da Generare.
-        Double fitnessLinea = 0.8*7;
-        
-        
+        Double fitnessLinea = 0.8 * 7;
+
         DeformazioneLaser instance = new DeformazioneLaser();
         instance.loop2(mediaFitnessPOP);
-          
-        
+
         //Grafico dati
         final GraficoJ grfc;
         grfc = new GraficoJ("Grafico media fitness e generazioni", mediaFitnessPOP, fitnessLinea);
         grfc.pack();
         RefineryUtilities.centerFrameOnScreen(grfc);
         grfc.setVisible(true);
-        
+
     }
 }

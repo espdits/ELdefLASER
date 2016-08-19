@@ -5,6 +5,7 @@
  */
 package org.dellapenna.research.ldr;
 
+import Servizi.GraficoRandomSelecter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +17,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import org.jfree.ui.RefineryUtilities;
 
 /**
  *
@@ -485,13 +487,12 @@ public class Popolazione {
      * @return matingPool piscina d'accoppiamento degli individui
      *
      */
-    private void rouletteWheelSelection() {
+    private void rouletteWheelSelection() throws IOException {
 
         Random r, rDiv;
         r = new Random();
         rDiv = new Random();
         
-        Set newSetMatingPool = new TreeSet();
 
         //Somma fitness di tutta la popolazione
         Double deltaS;
@@ -518,8 +519,11 @@ public class Popolazione {
         
         //Numeri della roulette
         Double roulSel[];
-        roulSel = new Double[oldPopolazione.size()];
-             
+        roulSel = new Double[oldPopolazione.size()+1];
+        
+        //Numeri per graficare il numero random
+        Double vectRandomSelecter[];
+        vectRandomSelecter = new Double[oldPopolazione.size()];
         
         //Array per ordinare la fitness degli individuo rimaneti
         ArrayList<LineaDeformabile> arrayValFitness;
@@ -604,7 +608,7 @@ public class Popolazione {
             i++;
         }
         
-        
+        /*
         // creo la roulette vera e propria
         for(int k=0; k<probSel.length; k++){
             if(k==0){
@@ -614,6 +618,24 @@ public class Popolazione {
                 roulSel[k] = roulSel[k-1] + probSel[k];
             }
         }
+        */  
+ 
+    //    System.out.println("");
+     //   System.out.println("Inizio Roulette ");
+        //Prima stanghetta roulette posta a 0
+        roulSel[0] = 0.0;
+    //    System.out.println("ROULETTE[0] = "+ roulSel[0]);
+        // creo la roulette vera e propria
+        for(int k=1; k<probSel.length; k++){
+            roulSel[k] = roulSel[k-1] + probSel[k-1];  
+     //       System.out.println("ROULETTE[" + k+"] = "+ roulSel[k]);
+        }
+        roulSel[oldPopolazione.size()] = 1.0;
+     //   System.out.println("ROULETTE["+oldPopolazione.size()+"] = "+ roulSel[oldPopolazione.size()]);
+      //  System.out.println("");
+        
+ 
+        
         
         //contatore che mi fa da chiave dell'hashmap della mating pool
         int conHM = 0;  
@@ -625,11 +647,13 @@ public class Popolazione {
             //essere migliorata notevolmente   ||| È FONDAMENTALE QUESTO PASSO |||. 
             
             randomSelecter = generaRandomSelecter(rDiv, r);
-     
+            vectRandomSelecter[conHM] = randomSelecter;
+          //  System.out.println("");
+        //    System.out.println("Random selecter= " + randomSelecter);
             int contatore=0;
             // devo selezionare individuo estratto dal numero randomico.
-            for (int j = 0; j < oldPopolazione.size() - 1; j++) {
-
+            for (int j = 0; j < oldPopolazione.size() ; j++) {
+    
                 //prendo la lineaDeformabile su cui lavorare            
                 LineaDeformabile lineaDefWork = (LineaDeformabile) oldPopolazione.get(j);
                 if (randomSelecter < roulSel[j + 1] && randomSelecter > roulSel[j]) {
@@ -640,13 +664,23 @@ public class Popolazione {
 
                     // Giustamente gli indici dell'hashmap che cambiano
                     matingPool.put(conHM, lineaDefWork);
-
+                    
+                   // System.out.println("elemento selezionato: " + j );
+                    
                     conHM++;
                     contatore++;
 
                 }              
             }
         }
+               
+    /*    //Grafico RandomSelecter
+        final GraficoRandomSelecter grcfRS;
+        grcfRS = new GraficoRandomSelecter("Grafico valori randomici generati a ogni generazione", vectRandomSelecter );
+        grcfRS.pack();
+        RefineryUtilities.centerFrameOnScreen(grcfRS);
+        grcfRS.setVisible(true);
+    */    
     }
 
     
@@ -665,9 +699,9 @@ public class Popolazione {
             case 1:
                 return (Double) r.nextDouble() / 1;
             case 2:
-                return (Double) r.nextDouble() / 100;
+                return (Double) r.nextDouble() / 1;
             case 3:
-                return (Double) r.nextDouble() / 100;
+                return (Double) r.nextDouble() / 10;
             case 4:
                 return (Double) r.nextDouble() / 1;
             default:
