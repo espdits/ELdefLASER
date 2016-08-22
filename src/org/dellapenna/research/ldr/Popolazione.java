@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import java.util.Map;
 import java.util.Random;
@@ -58,7 +59,10 @@ public class Popolazione {
 
     //Soglia Probabilità di Mutazione 0.001 a 0.01
     final Double sogliaMutazione = 0.01;
-
+    
+    // Tipo di modifiche attuabbili alla mutazione (  numero modifiche attuabili - 1 )
+    int numMod = 3;
+            
     //Generatori randomici
     Random rq = new Random(); //per le prove
     Random rm = new Random(); //per le prove
@@ -401,6 +405,9 @@ public class Popolazione {
         // Applico parent selection o direttamente crossover e mutazione?
         //Applico direttamente crossover e mutazione
         crossover_mutazione();
+        
+        //mutazione beta
+        mutazione();
          
     }
 
@@ -905,7 +912,7 @@ public class Popolazione {
 
         }
 
-        for (Object numeroPos : elementiNewL2) {
+        for(Object numeroPos : elementiNewL2) {
             Integer pos = (Integer) numeroPos;
             newQuadratiL2.add(pos);
 
@@ -920,5 +927,149 @@ public class Popolazione {
     public void setOldPopolazione(HashMap<Integer, LineaDeformabile> oldPopolazione) {
         this.oldPopolazione = oldPopolazione;
     }
+    
+    
+     private void mutazione(){
+         // Variabili su cui lavorare
+     
+       
+         // per tutte le linee deformabili della nuova popolazione
+         for(Map.Entry entry_lineaDef : newPop.entrySet()){
+            // Variabili su cui lavorare
+            HashMap pos_set = new HashMap();
+            LineaDeformabile lineaDef = (LineaDeformabile) entry_lineaDef.getValue();
+            // seleziono un quadrato della linea e lo modifico.
+                 
+            // genero un intero randomico che permette la selezione casuale di un quadrato
+            int rmSelect = rm.nextInt(contatoreMosse);
+     //       System.out.println("rmSelect " + rmSelect);
+            int contMS=0;    
+            //scelgo in base al numero randomico il quadrato da mutare
+            for(Map.Entry entry_quad_mod : lineaDef.getQuadratiDeformati().entrySet()){
+                    
+                Integer pos_work;
+                pos_work = ( Integer ) entry_quad_mod.getKey();
+                     
+                //Carico l'insieme con i dati delle posizioni dei quadrati
+                pos_set.put(contMS,pos_work);   
+                contMS++;
+            }
+            // devo modificare la posizione estratta dal random selecter
+            Integer pos_work_now = (Integer) pos_set.get(rmSelect);
+            // devo modificare il quadrato nella posizione selezionata nella lineaDeformabile
+            Quadrato quadrato_work = (Quadrato ) lineaDef.getQuadratiDeformati().get(pos_work_now);
+            
+            // per modificare: devo sapere la modifica che aveva e selezionarla una nuova diversa
+            // dalla precedente.
+            String modifica = quadrato_work.nome_def;
+             switch (modifica) {
+                 case "LL":
+                     switchLL(quadrato_work);
+                     break;
+                 case "LR":
+                     switchLR(quadrato_work);
+                     break;
+                 case "UL":
+                     switchUL(quadrato_work);
+                     break;
+                 case "UR":
+                     switchUR(quadrato_work);
+                     break;
+                 default:
+                     System.err.println("errore modifica out of bound");
+                     break;
+             }
+          //imposto il quadrato mutato nella linea deformabile 
+          lineaDef.getQuadratiDeformati().put(pos_work_now, quadrato_work);
+            
+        }  
+    }
+     
+     private void switchLL(Quadrato quadrato_work ){
+        //genero un altro numero casuale
+        int intMod = rq.nextInt(numMod);  
+     
+        switch(intMod){
+            case 0:
+                quadrato_work.nome_def="LR";
+                break;
+            case 1: 
+                quadrato_work.nome_def="UL";
+                break;
+            case 2: 
+                quadrato_work.nome_def="UR";
+                break; 
+            default:
+                System.err.println("errore modifica numMOD");
+                break;
+        }
+         
+     }
+     
+     
+    private void switchLR(Quadrato quadrato_work) {
+        //genero un altro numero casuale
+        int intMod = rq.nextInt(numMod);
 
+        switch (intMod) {
+            case 0:
+                quadrato_work.nome_def = "LL";
+                break;
+            case 1:
+                quadrato_work.nome_def = "UL";
+                break;
+            case 2:
+                quadrato_work.nome_def = "UR";
+                break;
+            default:
+                System.err.println("errore modifica numMOD");
+                break;
+        }
+    }
+          
+          
+    private void switchUL(Quadrato quadrato_work ){
+        //genero un altro numero casuale
+        int intMod = rq.nextInt(numMod);  
+        
+                switch(intMod){
+            case 0:
+                quadrato_work.nome_def="LR";
+                break;
+            case 1: 
+                quadrato_work.nome_def="LL";
+                break;
+            case 2: 
+                quadrato_work.nome_def="UR";
+                break; 
+            default:
+                System.err.println("errore modifica numMOD");
+                break;
+        }
+         
+    }
+               
+    private void switchUR(Quadrato quadrato_work ){
+        //genero un altro numero casuale
+        int intMod = rq.nextInt(numMod);  
+         
+                switch(intMod){
+            case 0:
+                quadrato_work.nome_def="LR";
+                break;
+            case 1: 
+                quadrato_work.nome_def="UL";
+                break;
+            case 2: 
+                quadrato_work.nome_def="LL";
+                break; 
+            default:
+                System.err.println("errore modifica numMOD");
+                break;
+        }
+    }
+     
+     
+     
+     
 }

@@ -36,7 +36,7 @@ public class GraficoJ extends ApplicationFrame {
      * @param fitnessLinea costante che rappresenta il valore di fitness della linea da ottenere
      * @throws IOException 
      */
-    public GraficoJ(final String titolo, Double[] datiFitness, Double fitnessLinea) throws IOException {
+    public GraficoJ(final String titolo, Double[] datiFitness, Double fitnessLinea, String name) throws IOException {
 
         super(titolo);
 
@@ -50,7 +50,7 @@ public class GraficoJ extends ApplicationFrame {
 
         setContentPane(chartPanel);
 
-        ChartUtilities.saveChartAsPNG(new File("/home/gianni/Documenti/output/grafico.png"), chart, 1024, 768);
+        ChartUtilities.saveChartAsPNG(new File("/home/gianni/Documenti/output/" +name + ".png"), chart, 1024, 768);
 
     }
 
@@ -67,12 +67,12 @@ public class GraficoJ extends ApplicationFrame {
 
         XYSeriesCollection dataset = new XYSeriesCollection();
 
-        XYSeries dataPOP = riempiDataPOP("Media fitness", datiFitness);
+        XYSeries dataLineaDef = riempiDataLineaDeformabile("Fitness Linea Deformabile", datiFitness);
 
         XYSeries dataLinea = riempiDataLinea("Fitness Linea", datiFitness, fitnessLinea);
 
         dataset.addSeries(dataLinea);
-        dataset.addSeries(dataPOP);
+        dataset.addSeries(dataLineaDef);
 
         return dataset;
 
@@ -87,7 +87,7 @@ public class GraficoJ extends ApplicationFrame {
      * fitness di ogni popolazione
      * @return serie di valori per riempimento grafo
      */
-    private XYSeries riempiDataPOP(String label, Double[] datiFitness) {
+    private XYSeries riempiDataLineaDeformabile(String label, Double[] datiFitness) {
 
         XYSeries serie = new XYSeries(label);
 
@@ -138,9 +138,9 @@ public class GraficoJ extends ApplicationFrame {
         final JFreeChart chart = ChartFactory.createXYLineChart(
                 "Grafico a Linea", //titolo
 
-                "Generazione", //label asse delle X
+                "n° individuo", //label asse delle X
 
-                "Media Funzione Fitness", //label asse dell Y
+                "Valore Funzione Fitness", //label asse dell Y
 
                 dataset, // sorgente dei dati
 
