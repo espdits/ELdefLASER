@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
+import javax.swing.WindowConstants;
 import org.jfree.ui.RefineryUtilities;
 
 /**
@@ -161,6 +162,8 @@ public class DeformazioneLaser {
      * @throws java.io.IOException
      */
     public void loop2() throws IOException, Exception {
+        
+        
         int[] pos = {22, 28, 32, 37, 45, 12, 35};
 
         double media = 0;
@@ -168,19 +171,24 @@ public class DeformazioneLaser {
         int istanza = 1; // istanza della popolazione inizializzata a 1
         
         
-        // fitness linea
-        Double fitnessLinea = 0.8 * 7;
+
         
         
         
         //inizializzazione 
         Popolazione pop = new Popolazione();
 
+
+        
         //creo linea
         Linea linea = new Linea();
-        linea.createManualLine(linea, pos);
+        linea.creataRealLine(linea);
+        //linea.createManualLine(linea, pos);
         linea.stampaLinea(linea);
 
+        // fitness linea
+        Double fitnessLinea = linea.fitnessLinea();
+        
         //creo prima popolazione
         pop.creaPopolazione();
         previousPop = pop.getPrimaPOP();
@@ -210,8 +218,8 @@ public class DeformazioneLaser {
         grfc = new GraficoJ("Grafico Valore fitness e generazioni", auxGrfc, fitnessLinea, "primaPOP");
         grfc.pack();
         RefineryUtilities.centerFrameOnScreen(grfc);
-        grfc.setVisible(false); // non lo visualizzo ma lo salvo in file 
-        
+        grfc.setVisible(true); // non lo visualizzo ma lo salvo in file 
+
         GestioneSalvataggio.salvaDATA(previousPop, pop.getContatoreMosse(), "primaPOP");
 
         //svuoto vettore ausiliario
@@ -231,7 +239,7 @@ public class DeformazioneLaser {
 
             Popolazione nextPop;
             nextPop = new Popolazione();
-            media = 0;
+           // media = 0;
 
             System.out.println("istanza n° " + istanza);
 
@@ -264,13 +272,16 @@ public class DeformazioneLaser {
             grfc2 = new GraficoJ("Grafico Valore fitness e generazioni", auxGrfc, fitnessLinea, file_name);
             grfc2.pack();
             RefineryUtilities.centerFrameOnScreen(grfc);
-            grfc2.setVisible(false); // non lo visualizzo ma lo salvo in file 
-            
+            grfc2.setVisible(true); // non lo visualizzo ma lo salvo in file 
+     
+         
             //svuoto vettore ausiliario salvataggio grafico
            
             //Creo e salvo il file per ogni popolazione
             GestioneSalvataggio.salvaDATA(currentPop, pop.getContatoreMosse(), file_name);
-
+            
+            
+            
             previousPop = null;
             previousPop = currentPop;
             currentPop = null;

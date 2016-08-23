@@ -27,7 +27,7 @@ import org.jfree.ui.RefineryUtilities;
 public class Popolazione {
 
     //Variabile che conta le mosse da effettuare per creare la prima popolazione
-    final int contatoreMosse = 7;
+    final int contatoreMosse = 24;
 
     //Variabile che imposta la dimensione della popolazione
     final int dimPopolazione = 1000;
@@ -668,9 +668,11 @@ public class Popolazione {
                     // per aggiornare al fitness reale
                     Double valFitnessWork = fitnessUPD[j];
                     lineaDefWork.setVal_fitness(valFitnessWork);
+                    LineaDeformabile askatasuna;
+                    askatasuna = lineaDefWork.clone();
 
                     // Giustamente gli indici dell'hashmap che cambiano
-                    matingPool.put(conHM, lineaDefWork);
+                    matingPool.put(conHM, askatasuna);
                     
                    // System.out.println("elemento selezionato: " + j );
                     

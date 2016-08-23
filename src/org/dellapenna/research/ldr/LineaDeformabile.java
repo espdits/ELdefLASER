@@ -1,4 +1,4 @@
-package org.dellapenna.research.ldr;
+ package org.dellapenna.research.ldr;
 
 import java.util.Map;
 import java.util.Objects;
@@ -164,9 +164,15 @@ public class LineaDeformabile implements Cloneable{
     }
  
     @Override
-    public Object clone() {
+    public LineaDeformabile clone() {
         try {
-                return super.clone();
+            
+                LineaDeformabile lineaDef = (LineaDeformabile) super.clone();
+                lineaDef.name= name;
+                lineaDef.quadrati_deformati.putAll(quadrati_deformati);
+                lineaDef.val_fitness = new Double(val_fitness);      
+                return lineaDef;
+                
 	    } catch (CloneNotSupportedException e) {
 		e.printStackTrace();
 		return null;

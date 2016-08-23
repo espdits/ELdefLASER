@@ -19,7 +19,7 @@ public class Linea {
     private Map<Integer, Quadrato> quadrati_deformati = new TreeMap(); //la treemap mantiene i quadrati ordinati e ha tempo di accesso log(n)
     public final int lunghezza_linea = 50; //da definire caso per caso
     
-    public final int quad_deformati = 7;
+    public final int quad_deformati = 24;
     
 
     //Metodo che permette la realizzazione di una linea Deformabile con X quadrati modificati
@@ -143,6 +143,32 @@ public class Linea {
            
            
        }
+       
+       //Metodo che genera la linea da ottenere ad omega.       
+       public void creataRealLine(Linea linea){
+           
+           int pos[] = {3,5,7,9,11,13,15,17,19,21,23,25,28,30,32,34,36,38,40,42,44,46,48,49};
+            for (int intero : pos) {
+            Quadrato q = createQuadrato(intero);
+            }
+            
+            
+            for(int j=0; j<6; j++){
+                linea.deforma(Mossa.a_s, pos[j]);
+            }
+            for(int j=6;j<18;j++){
+                linea.deforma(Mossa.b_s, pos[j]);
+            }
+            for(int j=18; j<pos.length; j++){
+                linea.deforma(Mossa.a_s, pos[j]);
+            }
+            
+           
+       }
+       
+       
+       
+      
         
         
         

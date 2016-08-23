@@ -8,6 +8,7 @@ package Servizi;
 import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
+import javax.swing.WindowConstants;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
@@ -50,6 +51,8 @@ public class GraficoRandomSelecter extends ApplicationFrame {
         setContentPane(chartPanel);
 
         ChartUtilities.saveChartAsPNG(new File("/home/gianni/Documenti/output/graficoRandomS.png"), chart, 1024, 768);
+        
+        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
     }
 
