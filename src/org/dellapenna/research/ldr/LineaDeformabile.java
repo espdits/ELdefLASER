@@ -1,9 +1,9 @@
  package org.dellapenna.research.ldr;
 
+
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
-
 /**
  *
  * @author Giuseppe Della Penna
@@ -11,7 +11,7 @@ import java.util.TreeMap;
  codifica la linea isDeformabile formata da quadrati consecutivi
  *
  */
-public class LineaDeformabile implements Cloneable{
+public class LineaDeformabile{
 
     public static final int threshold_tempo_modifica = 1;
     private static final Quadrato quadrato_default = new Quadrato();
@@ -22,6 +22,13 @@ public class LineaDeformabile implements Cloneable{
     private String name;
 
 
+    public LineaDeformabile(LineaDeformabile l){
+        this.name=l.getName();
+        this.val_fitness=l.getVal_fitness();
+        this.quadrati_deformati.putAll(l.quadrati_deformati);
+                
+           
+    }
     
     public LineaDeformabile(){
         this.val_fitness=0.0;
@@ -162,25 +169,6 @@ public class LineaDeformabile implements Cloneable{
     public void setQuadrati_deformati(Map<Integer, Quadrato> quadrati_deformati) {
         this.quadrati_deformati = quadrati_deformati;
     }
- 
-    @Override
-    public LineaDeformabile clone() {
-        try {
-            
-                LineaDeformabile lineaDef = (LineaDeformabile) super.clone();
-                lineaDef.name= name;
-                lineaDef.quadrati_deformati.putAll(quadrati_deformati);
-                lineaDef.val_fitness = new Double(val_fitness);      
-                return lineaDef;
-                
-	    } catch (CloneNotSupportedException e) {
-		e.printStackTrace();
-		return null;
-	    }
-	}
-
-
-
   
 
 }

@@ -7,7 +7,7 @@ package org.dellapenna.research.ldr;
  * codifica un quadrato della linea deformabile
  *
  */
-public class Quadrato {
+public class Quadrato implements Cloneable{
 
     public int last_modification_time = 0; //tempo dell'ultima modifica
     public double deformazione = 0; //quali numeri servono per codificare la deformazione del quadrato??
@@ -42,6 +42,14 @@ public class Quadrato {
             return false;
         }
         return true;
+    }
+    
+    @Override
+    public Object clone() throws CloneNotSupportedException{
+        
+        Quadrato e = (Quadrato) super.clone();
+        
+        return e;
     }
     
     

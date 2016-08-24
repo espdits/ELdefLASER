@@ -3,7 +3,6 @@ package org.dellapenna.research.ldr;
 /*prova cambiamenti per git*/
 import Servizi.GestioneSalvataggio;
 import Servizi.GraficoJ;
-import Servizi.GraficoRandomSelecter;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
-import javax.swing.WindowConstants;
 import org.jfree.ui.RefineryUtilities;
 
 /**
@@ -157,8 +155,7 @@ public class DeformazioneLaser {
      * LOOP2 metodo per generare una popolazione salvare lavori valutare con la
      * funzione di fitness e risalvare valori
      *
-     * @param mediaFitnessPOP variabile per stampa grafica media Fitness di ogni
-     * popolazione
+     * 
      * @throws java.io.IOException
      */
     public void loop2() throws IOException, Exception {
@@ -182,8 +179,8 @@ public class DeformazioneLaser {
         
         //creo linea
         Linea linea = new Linea();
-        linea.creataRealLine(linea);
-        //linea.createManualLine(linea, pos);
+       // linea.creataRealLine(linea);
+        linea.createManualLine(linea, pos);
         linea.stampaLinea(linea);
 
         // fitness linea
@@ -255,7 +252,7 @@ public class DeformazioneLaser {
 
             for (Map.Entry entry_lineaDef : currentPop.entrySet()) {
                 LineaDeformabile lineaWork = (LineaDeformabile) entry_lineaDef.getValue();
-                lineaWork.setVal_fitness(pop.valFitness(linea, lineaWork));
+                lineaWork.setVal_fitness(nextPop.valFitness(linea, lineaWork));
                 auxGrfc[indexGrfc2]= lineaWork.getVal_fitness();
                 indexGrfc2++;
                 //media = media + lineaWork.getVal_fitness();

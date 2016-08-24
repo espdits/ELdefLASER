@@ -5,6 +5,7 @@
  */
 package org.dellapenna.research.ldr;
 
+import ClonerGR.*;
 import Servizi.GraficoRandomSelecter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-
+import org.apache.commons.lang3.SerializationUtils;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -27,7 +28,7 @@ import org.jfree.ui.RefineryUtilities;
 public class Popolazione {
 
     //Variabile che conta le mosse da effettuare per creare la prima popolazione
-    final int contatoreMosse = 24;
+    final int contatoreMosse = 7;
 
     //Variabile che imposta la dimensione della popolazione
     final int dimPopolazione = 1000;
@@ -494,7 +495,7 @@ public class Popolazione {
      * @return matingPool piscina d'accoppiamento degli individui
      *
      */
-    private void rouletteWheelSelection() throws IOException {
+    private void rouletteWheelSelection() throws IOException, CloneNotSupportedException {
 
         Random r, rDiv;
         r = new Random();
@@ -662,17 +663,26 @@ public class Popolazione {
             for (int j = 0; j < oldPopolazione.size() ; j++) {
     
                 //prendo la lineaDeformabile su cui lavorare            
-                LineaDeformabile lineaDefWork = (LineaDeformabile) oldPopolazione.get(j);
+                
+                LineaDeformabile lineaDefWorkor = (LineaDeformabile) oldPopolazione.get(j);
+ 
+                //Eseguo un deep CLONE per evitare sovrapposizione di dati!!
+                Cloner cloner = new Cloner();
+                LineaDeformabile lineaDefWork = cloner.deepClone(lineaDefWorkor);
+                
+              //  System.out.println("lineadefworkOR " + lineaDefWorkor);
+            //    System.out.println("lineaDefWork " + lineaDefWork);
+                
+           //     System.out.println("");
+                
                 if (randomSelecter < roulSel[j + 1] && randomSelecter > roulSel[j]) {
 
                     // per aggiornare al fitness reale
                     Double valFitnessWork = fitnessUPD[j];
                     lineaDefWork.setVal_fitness(valFitnessWork);
-                    LineaDeformabile askatasuna;
-                    askatasuna = lineaDefWork.clone();
-
+                    
                     // Giustamente gli indici dell'hashmap che cambiano
-                    matingPool.put(conHM, askatasuna);
+                    matingPool.put(conHM, lineaDefWork);
                     
                    // System.out.println("elemento selezionato: " + j );
                     
@@ -1070,7 +1080,10 @@ public class Popolazione {
                 break;
         }
     }
-     
+    
+    
+    
+
      
      
      
