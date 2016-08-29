@@ -29,7 +29,7 @@ import org.jfree.ui.ApplicationFrame;
  * 
  * @author Esteban Lombardozzi
  */
-public class GraficoJ extends ApplicationFrame {
+public class GraficoJ extends JFrame {
 
     /**
      * Costruttore che permette la visualizzazione di un grafico 

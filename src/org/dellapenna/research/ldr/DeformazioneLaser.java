@@ -215,7 +215,7 @@ public class DeformazioneLaser {
         grfc = new GraficoJ("Grafico Valore fitness e generazioni", auxGrfc, fitnessLinea, "primaPOP");
         grfc.pack();
         RefineryUtilities.centerFrameOnScreen(grfc);
-        grfc.setVisible(true); // non lo visualizzo ma lo salvo in file 
+        grfc.setVisible(false); // non lo visualizzo ma lo salvo in file 
 
         GestioneSalvataggio.salvaDATA(previousPop, pop.getContatoreMosse(), "primaPOP");
 
@@ -269,7 +269,7 @@ public class DeformazioneLaser {
             grfc2 = new GraficoJ("Grafico Valore fitness e generazioni", auxGrfc, fitnessLinea, file_name);
             grfc2.pack();
             RefineryUtilities.centerFrameOnScreen(grfc);
-            grfc2.setVisible(true); // non lo visualizzo ma lo salvo in file 
+            grfc2.setVisible(false); // non lo visualizzo ma lo salvo in file 
      
          
             //svuoto vettore ausiliario salvataggio grafico
@@ -283,6 +283,8 @@ public class DeformazioneLaser {
             previousPop = currentPop;
             currentPop = null;
         }
+        
+        System.exit(0x0);
 
     }
 
