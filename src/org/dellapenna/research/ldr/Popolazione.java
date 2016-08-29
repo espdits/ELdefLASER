@@ -28,21 +28,21 @@ import org.jfree.ui.RefineryUtilities;
 public class Popolazione {
 
     //Variabile che conta le mosse da effettuare per creare la prima popolazione
-    final int contatoreMosse = 7;
+    int contatoreMosse = 7;
 
     //Variabile che imposta la dimensione della popolazione
-    final int dimPopolazione = 1000;
+    int dimPopolazione = 1000;
     
     //Variabile da impostare che determina la lunghezza della linea ( veloce per test ) 
-    final int lungLinea = 50;
+    int lungLinea = 50;
 
     // numero che influisce sulla funzione di fitness come la differenza dalla posizione da modificare
     // e il quadrato modificato 
-    final double scartoPOS = 0.00125;
+    double scartoPOS = 0.00125;
     //numero di individui da prelevare deve essere un numero abbastanza piccolo 
     // e in rapporto alla dimensione della popolazione antecedente e costante per 
     // tutte le successive ( sempre pari ) 
-    final int selELit = 6;
+    int selELit = 6;
 
     //ArrayList salvataggio prima popolazione 
     private HashMap<Integer, LineaDeformabile> primaPOP = new HashMap<>();
@@ -56,13 +56,13 @@ public class Popolazione {
     
     
     //Soglia Probabilità di CrossOver deve essere dell'ordine di 10^-1
-    final Double sogliaCross = 0.7;
+    Double sogliaCross = 0.7;
 
     //Soglia Probabilità di Mutazione 0.001 a 0.01
     final Double sogliaMutazione = 0.01;
     
     // Tipo di modifiche attuabbili alla mutazione (  numero modifiche attuabili - 1 )
-    int numMod = 3;
+    final int numMod = 3;
             
     //Generatori randomici
     Random rq = new Random(); //per le prove
@@ -1080,8 +1080,29 @@ public class Popolazione {
                 break;
         }
     }
+
+    public void setContatoreMosse(int contatoreMosse) {
+        this.contatoreMosse = contatoreMosse;
+    }
+
+    public void setDimPopolazione(int dimPopolazione) {
+        this.dimPopolazione = dimPopolazione;
+    }
+
+    public void setLungLinea(int lungLinea) {
+        this.lungLinea = lungLinea;
+    }
+
+    public void setSelELit(int selELit) {
+        this.selELit = selELit;
+    }
+
+    public void setSogliaCross(Double sogliaCross) {
+        this.sogliaCross = sogliaCross;
+    }
     
-    
+  
+
     
 
      

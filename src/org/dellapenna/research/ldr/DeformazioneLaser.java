@@ -20,14 +20,16 @@ import org.jfree.ui.RefineryUtilities;
  * @author Giuseppe Della Penna
  */
 public class DeformazioneLaser {
-
+    
     // Popolazione corrente 
     HashMap<Integer, LineaDeformabile> currentPop = new HashMap<>();
 
     // Popolazione precedente alla corrente
     HashMap<Integer, LineaDeformabile> previousPop = new HashMap<>();
+    
+    List<GraficoJ> listaGrafici = new ArrayList<>();
 
-    final static int X = 100; // generazione che devo creare
+    final static int X = 5; // generazione che devo creare
 
     //la coda contiene gli stati (linee deformate e tempo corrente) da valutare
     //QUESTA STRUTTURA DOVREBBE ANDARE SU DISCO;
@@ -45,7 +47,8 @@ public class DeformazioneLaser {
 
     Random rq = new Random(); //per le prove
     Random rm = new Random(); //per le prove
-
+    
+   
     //determina le prossime mosse valide da applicare allo stato corrente. Dovrebbe enumerarle o usare delle euristiche
     //per capire quelle più opportune. In questo esempio procediamo a caso...
     private List<MossaApplicata> prossimeMosseValide(Stato stato) {
@@ -216,6 +219,7 @@ public class DeformazioneLaser {
         grfc.pack();
         RefineryUtilities.centerFrameOnScreen(grfc);
         grfc.setVisible(false); // non lo visualizzo ma lo salvo in file 
+        listaGrafici.add(grfc);
 
         GestioneSalvataggio.salvaDATA(previousPop, pop.getContatoreMosse(), "primaPOP");
 
@@ -270,6 +274,7 @@ public class DeformazioneLaser {
             grfc2.pack();
             RefineryUtilities.centerFrameOnScreen(grfc);
             grfc2.setVisible(false); // non lo visualizzo ma lo salvo in file 
+            listaGrafici.add(grfc2);
      
          
             //svuoto vettore ausiliario salvataggio grafico
@@ -284,30 +289,196 @@ public class DeformazioneLaser {
             currentPop = null;
         }
         
-        System.exit(0x0);
+        
 
     }
+    
+    
+    
+    public DeformazioneLaser(){
+        
+    }
+    
+    public DeformazioneLaser(int generazioni, int dimPop, int selElit, Double sogliaCross, int LunghL, int quad_defLinea, int LunghLD, int quad_defLD){
+        
+    }
+    
+     public void loop2(int generazioni, int dimPop, int selElit,Double sogliaCross , int LunghL, int quad_defLinea, int LunghLD, int quad_defLD) throws IOException, Exception {
+        
+        
+        int[] pos = {22, 28, 32, 37, 45, 12, 35};
 
-    public static void main(String args[]) throws IOException, Exception {
+        int istanza = 1; // istanza della popolazione inizializzata a 1
 
-        //Dati fitness di ogni popolazione in media
-   //     Double[] mediaFitnessPOP = new Double[X];
-        //Double[][] matrVectRandomSelecter = new Double[X][];
+        //inizializzazione 
+        Popolazione pop = new Popolazione();
+        pop.setContatoreMosse(quad_defLD);
+        pop.setDimPopolazione(dimPop);
+        pop.setLungLinea(LunghLD);
+        pop.setSogliaCross(sogliaCross);
+        
+        
 
-        // fitnessLinea ( per ora )  calcolata manualmente:
-        //      0.8 è il valore del quadrato nella posizione giusta
-        //      7 sono i quadrati che ho modificato nella linea da Generare.
-      //  Double fitnessLinea = 0.8 * 7;
 
-        DeformazioneLaser instance = new DeformazioneLaser();
-        instance.loop2();
+        
+        //creo linea
+        Linea linea = new Linea();
+        
+        linea.setLunghezza_linea(LunghL);
+        linea.setQuad_deformati(quad_defLinea);
+       // linea.creataRealLine(linea);
+        linea.createManualLine(linea, pos);
+        linea.stampaLinea(linea);
 
-    /*    //Grafico dati
+        // fitness linea
+        Double fitnessLinea = linea.fitnessLinea();
+        
+        //creo prima popolazione
+        pop.creaPopolazione();
+        previousPop = pop.getPrimaPOP();
+        
+        // Variabile ausiliaria per il salvataggio di dati su grafo
+        Double[] auxGrfc = new Double[pop.dimPopolazione];
+        
+        int indexGrfc = 0;
+        //confronto le linee della popolazione con la linea generata e valuto il fitness
+        for (Map.Entry entry_lineaDef : previousPop.entrySet()) {
+
+            LineaDeformabile lineaWork = (LineaDeformabile) entry_lineaDef.getValue();
+            lineaWork.setVal_fitness(pop.valFitness(linea, lineaWork));
+            auxGrfc[indexGrfc]= lineaWork.getVal_fitness();
+            indexGrfc++;
+        //    media = media + lineaWork.getVal_fitness();
+
+        }
+
+       // mediaFitnessPOP[istanza - 1] = (Double) media / pop.dimPopolazione;
+        System.out.println("");
+        
+        //    System.out.println("media popolazione X : [" + (istanza-1) + "] =  " + mediaFitnessPOP[istanza-1]);
+        
+        //Creo grafo prima popolazione
         final GraficoJ grfc;
-        grfc = new GraficoJ("Grafico Valore fitness e generazioni", mediaFitnessPOP, fitnessLinea);
+        grfc = new GraficoJ("Grafico Valore fitness e generazioni", auxGrfc, fitnessLinea, "primaPOP");
         grfc.pack();
         RefineryUtilities.centerFrameOnScreen(grfc);
         grfc.setVisible(false); // non lo visualizzo ma lo salvo in file 
-*/
+        listaGrafici.add(grfc);
+
+        GestioneSalvataggio.salvaDATA(previousPop, pop.getContatoreMosse(), "primaPOP");
+
+        //svuoto vettore ausiliario
+     
+        
+        //Devo creare una nuova popolazione dalla precedente:
+        //  1 APPLICO ELITARISMO 
+        //  2 APPLICO ROULETTE WHEEL SELECTION
+        //  3 APPLICO PARENT SELECTION ( non creata ) 
+        //  4 CROSS-OVER
+        //  5 MUTAZIONE
+        //Devo fare un ciclo che mi va a creare X popolazioni 
+        for (int istanza2 = 2; istanza2 < generazioni; istanza2++) {
+
+            System.gc();
+            System.runFinalization();
+
+            Popolazione nextPop;
+            nextPop = new Popolazione();
+            
+            nextPop.setContatoreMosse(quad_defLD);
+            nextPop.setDimPopolazione(dimPop);
+            nextPop.setLungLinea(LunghLD);
+            nextPop.setSogliaCross(sogliaCross);
+          
+           // media = 0;
+
+            System.out.println("istanza n° " + istanza);
+
+            //Stringa per salvataggio nome file
+            String file_name;
+            file_name = Integer.toString(istanza);
+
+            nextPop.setOldPopolazione(previousPop);
+            nextPop.nextPopolazione();
+            currentPop = nextPop.getNewPop();
+            
+            int indexGrfc2 = 0;
+
+            for (Map.Entry entry_lineaDef : currentPop.entrySet()) {
+                LineaDeformabile lineaWork = (LineaDeformabile) entry_lineaDef.getValue();
+                lineaWork.setVal_fitness(nextPop.valFitness(linea, lineaWork));
+                auxGrfc[indexGrfc2]= lineaWork.getVal_fitness();
+                indexGrfc2++;
+                //media = media + lineaWork.getVal_fitness();
+
+            }
+
+           // mediaFitnessPOP[istanza] = (Double) media / nextPop.dimPopolazione;
+
+            // System.out.println("media popolazione X : [" + istanza + "] =  " + mediaFitnessPOP[istanza]);
+            istanza++;
+
+            
+            final GraficoJ grfc2;
+            grfc2 = new GraficoJ("Grafico Valore fitness e generazioni", auxGrfc, fitnessLinea, file_name);
+            grfc2.pack();
+            RefineryUtilities.centerFrameOnScreen(grfc);
+            grfc2.setVisible(false); // non lo visualizzo ma lo salvo in file 
+            listaGrafici.add(grfc2);
+     
+         
+            //svuoto vettore ausiliario salvataggio grafico
+           
+            //Creo e salvo il file per ogni popolazione
+            GestioneSalvataggio.salvaDATA(currentPop, pop.getContatoreMosse(), file_name);
+            
+            
+            
+            previousPop = null;
+            previousPop = currentPop;
+            currentPop = null;
+        }
+        
+        
+
     }
+    
+/*
+    public static void main(String args[]) throws IOException, Exception {
+
+      
+        
+        DeformazioneLaser instance = new DeformazioneLaser();
+        instance.loop2();
+        
+        
+        
+        System.exit(0x0);
+
+
+    }
+    
+    
+    */
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

@@ -17,9 +17,9 @@ public class Linea {
     private static final Quadrato quadrato_default = new Quadrato();
     ///
     private Map<Integer, Quadrato> quadrati_deformati = new TreeMap(); //la treemap mantiene i quadrati ordinati e ha tempo di accesso log(n)
-    public final int lunghezza_linea = 50; //da definire caso per caso
+    int lunghezza_linea = 50; //da definire caso per caso
     
-    public final int quad_deformati = 7;
+    int quad_deformati = 7;
     
 
     //Metodo che permette la realizzazione di una linea Deformabile con X quadrati modificati
@@ -165,6 +165,17 @@ public class Linea {
             
            
        }
+
+    public void setLunghezza_linea(int lunghezza_linea) {
+        this.lunghezza_linea = lunghezza_linea;
+    }
+
+    public void setQuad_deformati(int quad_deformati) {
+        this.quad_deformati = quad_deformati;
+    }
+       
+       
+       
        
        
        
