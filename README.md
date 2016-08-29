@@ -30,8 +30,9 @@ nella cartella DROPBOX /classi_supporto:
     2) poi-3.5-FINAL.jar
     3) poi-3.9-sources.jar
     4) poi-ooxml-3.9.jar
+    
 ( ECLIPSE O NETBEANS lo chiedono esplicitamente ).
 
-Si deve modificare anche il PATH del salvataggio file presente nella classe 
-GestioneSalvataggio.class. 
+Si deve modificare anche i PATH per il salvataggio dei file presenti nelle classi: 
+GestioneSalvataggio.java GraficoJ.java
       
