@@ -443,6 +443,144 @@ public class DeformazioneLaser {
 
     }
     
+     public void loop2(int generazioni, int dimPop, int selElit,Double sogliaCross) throws IOException, Exception {
+        
+        
+        int[] pos = {22, 28, 32, 37, 45, 12, 35};
+
+        int istanza = 1; // istanza della popolazione inizializzata a 1
+
+        //inizializzazione 
+        Popolazione pop = new Popolazione();
+    
+        pop.setDimPopolazione(dimPop);
+      
+        pop.setSogliaCross(sogliaCross);
+        
+        
+
+
+        
+        //creo linea
+        Linea linea = new Linea();
+      
+       // linea.creataRealLine(linea);
+        linea.createManualLine(linea, pos);
+        linea.stampaLinea(linea);
+
+        // fitness linea
+        Double fitnessLinea = linea.fitnessLinea();
+        
+        //creo prima popolazione
+        pop.creaPopolazione();
+        previousPop = pop.getPrimaPOP();
+        
+        // Variabile ausiliaria per il salvataggio di dati su grafo
+        Double[] auxGrfc = new Double[pop.dimPopolazione];
+        
+        int indexGrfc = 0;
+        //confronto le linee della popolazione con la linea generata e valuto il fitness
+        for (Map.Entry entry_lineaDef : previousPop.entrySet()) {
+
+            LineaDeformabile lineaWork = (LineaDeformabile) entry_lineaDef.getValue();
+            lineaWork.setVal_fitness(pop.valFitness(linea, lineaWork));
+            auxGrfc[indexGrfc]= lineaWork.getVal_fitness();
+            indexGrfc++;
+        //    media = media + lineaWork.getVal_fitness();
+
+        }
+
+       // mediaFitnessPOP[istanza - 1] = (Double) media / pop.dimPopolazione;
+        System.out.println("");
+        
+        //    System.out.println("media popolazione X : [" + (istanza-1) + "] =  " + mediaFitnessPOP[istanza-1]);
+        
+        //Creo grafo prima popolazione
+        final GraficoJ grfc;
+        grfc = new GraficoJ("Grafico Valore fitness e generazioni", auxGrfc, fitnessLinea, "primaPOP");
+        grfc.pack();
+        RefineryUtilities.centerFrameOnScreen(grfc);
+        grfc.setVisible(false); // non lo visualizzo ma lo salvo in file 
+        listaGrafici.add(grfc);
+
+        GestioneSalvataggio.salvaDATA(previousPop, pop.getContatoreMosse(), "primaPOP");
+
+        //svuoto vettore ausiliario
+     
+        
+        //Devo creare una nuova popolazione dalla precedente:
+        //  1 APPLICO ELITARISMO 
+        //  2 APPLICO ROULETTE WHEEL SELECTION
+        //  3 APPLICO PARENT SELECTION ( non creata ) 
+        //  4 CROSS-OVER
+        //  5 MUTAZIONE
+        //Devo fare un ciclo che mi va a creare X popolazioni 
+        for (int istanza2 = 2; istanza2 < generazioni; istanza2++) {
+
+            System.gc();
+            System.runFinalization();
+
+            Popolazione nextPop;
+            nextPop = new Popolazione();
+            
+     
+            nextPop.setDimPopolazione(dimPop);
+    
+            nextPop.setSogliaCross(sogliaCross);
+          
+           // media = 0;
+
+            System.out.println("istanza n° " + istanza);
+
+            //Stringa per salvataggio nome file
+            String file_name;
+            file_name = Integer.toString(istanza);
+
+            nextPop.setOldPopolazione(previousPop);
+            nextPop.nextPopolazione();
+            currentPop = nextPop.getNewPop();
+            
+            int indexGrfc2 = 0;
+
+            for (Map.Entry entry_lineaDef : currentPop.entrySet()) {
+                LineaDeformabile lineaWork = (LineaDeformabile) entry_lineaDef.getValue();
+                lineaWork.setVal_fitness(nextPop.valFitness(linea, lineaWork));
+                auxGrfc[indexGrfc2]= lineaWork.getVal_fitness();
+                indexGrfc2++;
+                //media = media + lineaWork.getVal_fitness();
+
+            }
+
+           // mediaFitnessPOP[istanza] = (Double) media / nextPop.dimPopolazione;
+
+            // System.out.println("media popolazione X : [" + istanza + "] =  " + mediaFitnessPOP[istanza]);
+            istanza++;
+
+            
+            final GraficoJ grfc2;
+            grfc2 = new GraficoJ("Grafico Valore fitness e generazioni", auxGrfc, fitnessLinea, file_name);
+            grfc2.pack();
+            RefineryUtilities.centerFrameOnScreen(grfc);
+            grfc2.setVisible(false); // non lo visualizzo ma lo salvo in file 
+            listaGrafici.add(grfc2);
+     
+         
+            //svuoto vettore ausiliario salvataggio grafico
+           
+            //Creo e salvo il file per ogni popolazione
+            GestioneSalvataggio.salvaDATA(currentPop, pop.getContatoreMosse(), file_name);
+            
+            
+            
+            previousPop = null;
+            previousPop = currentPop;
+            currentPop = null;
+        }
+        
+        
+
+    }
+    
 /*
     public static void main(String args[]) throws IOException, Exception {
 
@@ -460,6 +598,22 @@ public class DeformazioneLaser {
     
     
     */
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+ 
     
     
     

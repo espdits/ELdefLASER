@@ -3,28 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/org/dellapenna/research/ldr/DeformazioneLaser.java</file>
             <file>file:/home/gianni/NetBeansProjects/DefLaser/src/org/dellapenna/research/ldr/LineaDeformabile.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/ClonerGR/CloningException.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/ClonerGR/FastClonerArrayList.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/ClonerGR/FastClonerConcurrentHashMap.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/ClonerGR/FastClonerHashSet.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/ClonerGR/FastClonerLinkedList.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/ClonerGR/Cloner.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/ClonerGR/IInstantiationStrategy.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/ClonerGR/IFreezable.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/ClonerGR/FastClonerCustomMap.java</file>
             <file>file:/home/gianni/NetBeansProjects/DefLaser/src/org/dellapenna/research/ldr/Popolazione.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/ClonerGR/FastClonerCalendar.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/ClonerGR/FastClonerTreeMap.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/ClonerGR/ObjenesisInstantiationStrategy.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/ClonerGR/FastClonerHashMap.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/ClonerGR/IDumpCloned.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/ClonerGR/Immutable.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/org/dellapenna/research/ldr/Quadrato.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/ClonerGR/FastClonerCustomCollection.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/ClonerGR/IFastCloner.java</file>
-            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/ClonerGR/IDeepCloner.java</file>
+            <file>file:/home/gianni/NetBeansProjects/DefLaser/src/Servizi/InterfacciaUtente.java</file>
         </group>
     </open-files>
 </project-private>
